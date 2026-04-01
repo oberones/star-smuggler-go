@@ -7,4 +7,5 @@ public enum AppRoute
     PortOverview = 2,
     Trade = 3,
     Travel = 4,
+    GameOver = 5,
 }

@@ -15,6 +15,7 @@ public partial class AppController : Node
     private const string PortOverviewScenePath = "res://scenes/screens/PortOverviewScreen.tscn";
     private const string TradeScenePath = "res://scenes/screens/TradeScreen.tscn";
     private const string TravelScenePath = "res://scenes/screens/TravelScreen.tscn";
+    private const string GameOverScenePath = "res://scenes/screens/GameOverScreen.tscn";
 
     private readonly EconomyService _economyService = new();
     private readonly TravelService _travelService = new();
@@ -29,6 +30,7 @@ public partial class AppController : Node
     private Control? _screenHost;
     private GameSession? _gameSession;
     private DataRepository? _dataRepository;
+    private SaveService? _saveService;
     private Control? _currentScreen;
 
     public AppRoute CurrentRoute { get; private set; } = AppRoute.None;
@@ -38,6 +40,7 @@ public partial class AppController : Node
         _screenHost = GetNodeOrNull<Control>("%ScreenHost");
         _gameSession = GetNodeOrNull<GameSession>("%GameSession");
         _dataRepository = GetNodeOrNull<DataRepository>("%DataRepository");
+        _saveService = GetNodeOrNull<SaveService>("%SaveService");
 
         if (_screenHost is null)
         {
@@ -62,6 +65,7 @@ public partial class AppController : Node
             AppRoute.PortOverview => CreatePortOverviewScreen(),
             AppRoute.Trade => CreateTradeScreen(),
             AppRoute.Travel => CreateTravelScreen(),
+            AppRoute.GameOver => CreateGameOverScreen(),
             _ => null,
         };
 
@@ -88,7 +92,9 @@ public partial class AppController : Node
         }
 
         screen.StartRequested += OnStartRequested;
+        screen.ContinueRequested += OnContinueRequested;
         screen.QuitRequested += OnQuitRequested;
+        screen.SetCanContinue(_saveService?.HasSave() ?? false);
 
         return screen;
     }
@@ -106,6 +112,14 @@ public partial class AppController : Node
     private void OnQuitRequested()
     {
         GetTree().Quit();
+    }
+
+    private void OnContinueRequested()
+    {
+        if (_gameSession?.TryLoadSavedRun() == true)
+        {
+            NavigateTo(RouteForCurrentRun());
+        }
     }
 
     private Control? CreatePortOverviewScreen()
@@ -179,6 +193,27 @@ public partial class AppController : Node
         screen.BackRequested += () => NavigateTo(AppRoute.PortOverview);
         screen.TravelRequested += OnTravelRequested;
 
+        return screen;
+    }
+
+    private Control? CreateGameOverScreen()
+    {
+        if (_gameSession?.CurrentRun is not RunState run || _dataRepository is null)
+        {
+            GD.PushError("AppController cannot open GameOver without an active run and data repository.");
+            return null;
+        }
+
+        PackedScene? scene = ResourceLoader.Load<PackedScene>(GameOverScenePath);
+        if (scene?.Instantiate() is not GameOverScreen screen)
+        {
+            GD.PushError($"AppController failed to load '{GameOverScenePath}'.");
+            return null;
+        }
+
+        screen.SetSummary(BuildGameOverSummary(run, _dataRepository.Snapshot));
+        screen.RestartRequested += OnStartRequested;
+        screen.MenuRequested += () => NavigateTo(AppRoute.MainMenu);
         return screen;
     }
 
@@ -311,7 +346,13 @@ public partial class AppController : Node
             ? _tradeService.Buy(run, market, item, quantity)
             : _tradeService.Sell(run, market, item, quantity);
 
+        _gameSession.SaveCurrentRun();
         RefreshTradeScreen(result.Message);
+
+        if (ShouldRouteToGameOver(run))
+        {
+            NavigateTo(AppRoute.GameOver);
+        }
     }
 
     private void RefreshTradeScreen(string statusMessage)
@@ -362,8 +403,8 @@ public partial class AppController : Node
         }
 
         run.RecentEvent = _eventService.TryResolveTravelEvent(run, data, _economyService, _random);
-
-        NavigateTo(AppRoute.PortOverview);
+        _gameSession.SaveCurrentRun();
+        NavigateTo(RouteForCurrentRun());
     }
 
     private void RefreshTravelScreen(string statusMessage)
@@ -376,5 +417,39 @@ public partial class AppController : Node
         }
 
         travelScreen.Bind(BuildTravelScreenViewModel(run, _dataRepository.Snapshot, statusMessage));
+    }
+
+    private AppRoute RouteForCurrentRun()
+    {
+        if (_gameSession?.CurrentRun is not RunState run)
+        {
+            return AppRoute.MainMenu;
+        }
+
+        return ShouldRouteToGameOver(run) ? AppRoute.GameOver : AppRoute.PortOverview;
+    }
+
+    private bool ShouldRouteToGameOver(RunState run)
+    {
+        return _dataRepository is not null &&
+               _runEvaluator.IsGameOver(run, _dataRepository.Snapshot, _economyService, _travelService);
+    }
+
+    private string BuildGameOverSummary(RunState run, DataSnapshot data)
+    {
+        if (!data.PortsById.TryGetValue(run.Player.CurrentPortId, out PortDefinition? port))
+        {
+            return "This run ended, but the current port could not be resolved.";
+        }
+
+        int cargoValue = _economyService.GetSellableCargoValueAtCurrentPort(run, data);
+        int cheapestTravel = _travelService.GetCheapestTravelCostFromPort(port, data.Ports);
+
+        return
+            $"You are stranded at {port.Name}.\n\n" +
+            $"Credits: {run.Player.Credits}\n" +
+            $"Sellable cargo value: {cargoValue}\n" +
+            $"Cheapest travel cost: {cheapestTravel}\n\n" +
+            $"No route remains that your current cash and cargo can cover.";
     }
 }

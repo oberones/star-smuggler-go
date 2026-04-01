@@ -11,6 +11,7 @@ public partial class GameSession : Node
 
     private readonly Random _random = new();
     private DataRepository? _dataRepository;
+    private SaveService? _saveService;
 
     public RunState? CurrentRun { get; private set; }
 
@@ -19,6 +20,7 @@ public partial class GameSession : Node
     public override void _Ready()
     {
         _dataRepository = GetNodeOrNull<DataRepository>("%DataRepository");
+        _saveService = GetNodeOrNull<SaveService>("%SaveService");
     }
 
     public void StartNewRun()
@@ -30,7 +32,34 @@ public partial class GameSession : Node
         }
 
         CurrentRun = RunFactory.CreateNew(_dataRepository.Snapshot, _random);
+        _saveService?.SaveRun(CurrentRun);
         EmitSignal(SignalName.RunChanged);
+    }
+
+    public bool TryLoadSavedRun()
+    {
+        if (_saveService is null || !_saveService.HasSave())
+        {
+            return false;
+        }
+
+        RunState? loadedRun = _saveService.LoadRun();
+        if (loadedRun is null)
+        {
+            return false;
+        }
+
+        CurrentRun = loadedRun;
+        EmitSignal(SignalName.RunChanged);
+        return true;
+    }
+
+    public void SaveCurrentRun()
+    {
+        if (CurrentRun is not null)
+        {
+            _saveService?.SaveRun(CurrentRun);
+        }
     }
 
     public void ClearRun()
