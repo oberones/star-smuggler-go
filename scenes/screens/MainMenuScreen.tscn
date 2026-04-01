@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/presentation/screens/MainMenuScreen.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/main_menu.png" id="2_menu"]
+[ext_resource type="Texture2D" path="res://assets/ui/logo.png" id="3_logo"]
 
 [node name="MainMenuScreen" type="Control"]
 layout_mode = 3
@@ -11,14 +13,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0431373, 0.054902, 0.0901961, 1)
+texture = ExtResource("2_menu")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,10 +43,18 @@ theme_override_constants/margin_bottom = 36
 
 [node name="Panel" type="PanelContainer" parent="MarginContainer"]
 layout_mode = 2
+modulate = Color(1, 1, 1, 0.9)
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 18
+
+[node name="Logo" type="TextureRect" parent="MarginContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Title" type="Label" parent="MarginContainer/Panel/VBox"]
 layout_mode = 2
@@ -52,7 +65,7 @@ horizontal_alignment = 1
 [node name="Subtitle" type="Label" parent="MarginContainer/Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Godot Phase 0 bootstrap: routing, run state, and UI structure are live."
+text = "Smuggle cargo, survive the route, and keep one jump ahead of ruin."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -82,6 +95,6 @@ text = "Quit"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Waiting for the first gameplay slice."
+text = "Charting a course."
 horizontal_alignment = 1
 autowrap_mode = 3

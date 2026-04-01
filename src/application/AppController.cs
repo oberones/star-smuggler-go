@@ -32,6 +32,7 @@ public partial class AppController : Node
     private GameSession? _gameSession;
     private DataRepository? _dataRepository;
     private SaveService? _saveService;
+    private AudioService? _audioService;
     private Control? _currentScreen;
     private PendingTravelRequest? _pendingTravelRequest;
 
@@ -43,6 +44,7 @@ public partial class AppController : Node
         _gameSession = GetNodeOrNull<GameSession>("%GameSession");
         _dataRepository = GetNodeOrNull<DataRepository>("%DataRepository");
         _saveService = GetNodeOrNull<SaveService>("%SaveService");
+        _audioService = GetNodeOrNull<AudioService>("%AudioService");
 
         if (_screenHost is null)
         {
@@ -82,6 +84,7 @@ public partial class AppController : Node
         _currentScreen = nextScreen;
         _screenHost.AddChild(_currentScreen);
         CurrentRoute = route;
+        PlayRouteMusic(route);
         EmitSignal(SignalName.RouteChanged, route.ToString());
     }
 
@@ -98,6 +101,9 @@ public partial class AppController : Node
         screen.ContinueRequested += OnContinueRequested;
         screen.QuitRequested += OnQuitRequested;
         screen.SetCanContinue(_saveService?.HasSave() ?? false);
+        screen.SetStatusMessage((_saveService?.HasSave() ?? false)
+            ? "Resume a saved smuggling run or start a fresh route."
+            : "Start a new run to begin rebuilding StarSmuggler in Godot.");
 
         return screen;
     }
@@ -105,6 +111,7 @@ public partial class AppController : Node
     private void OnStartRequested()
     {
         _gameSession?.StartNewRun();
+        _audioService?.PlaySfx("click");
 
         if (_gameSession?.CurrentRun is RunState)
         {
@@ -114,11 +121,13 @@ public partial class AppController : Node
 
     private void OnQuitRequested()
     {
+        _audioService?.PlaySfx("click");
         GetTree().Quit();
     }
 
     private void OnContinueRequested()
     {
+        _audioService?.PlaySfx("click");
         if (_gameSession?.TryLoadSavedRun() == true)
         {
             NavigateTo(RouteForCurrentRun());
@@ -147,9 +156,21 @@ public partial class AppController : Node
         }
 
         screen.Bind(viewModel);
-        screen.BackRequested += () => NavigateTo(AppRoute.MainMenu);
-        screen.TravelRequested += () => NavigateTo(AppRoute.Travel);
-        screen.TradeRequested += () => NavigateTo(AppRoute.Trade);
+        screen.BackRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.MainMenu);
+        };
+        screen.TravelRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.Travel);
+        };
+        screen.TradeRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.Trade);
+        };
 
         return screen;
     }
@@ -170,7 +191,11 @@ public partial class AppController : Node
         }
 
         screen.Bind(BuildTradeScreenViewModel(run, _dataRepository.Snapshot, string.Empty));
-        screen.BackRequested += () => NavigateTo(AppRoute.PortOverview);
+        screen.BackRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.PortOverview);
+        };
         screen.BuyRequested += OnBuyRequested;
         screen.SellRequested += OnSellRequested;
 
@@ -193,7 +218,11 @@ public partial class AppController : Node
         }
 
         screen.Bind(BuildTravelScreenViewModel(run, _dataRepository.Snapshot, string.Empty));
-        screen.BackRequested += () => NavigateTo(AppRoute.PortOverview);
+        screen.BackRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.PortOverview);
+        };
         screen.TravelRequested += OnTravelRequested;
 
         return screen;
@@ -216,7 +245,11 @@ public partial class AppController : Node
 
         screen.SetSummary(BuildGameOverSummary(run, _dataRepository.Snapshot));
         screen.RestartRequested += OnStartRequested;
-        screen.MenuRequested += () => NavigateTo(AppRoute.MainMenu);
+        screen.MenuRequested += () =>
+        {
+            _audioService?.PlaySfx("click");
+            NavigateTo(AppRoute.MainMenu);
+        };
         return screen;
     }
 
@@ -246,6 +279,7 @@ public partial class AppController : Node
         {
             OriginName = origin.Name,
             DestinationName = destination.Name,
+            BackgroundTexturePath = "res://assets/screens/travel_background.png",
             TravelCost = _pendingTravelRequest.TravelCost,
             DurationSeconds = _pendingTravelRequest.DurationSeconds,
             StatusMessage = "Engines hot. Hold course or skip once you're ready.",
@@ -271,6 +305,8 @@ public partial class AppController : Node
             PortName = port.Name,
             PortDescription = port.Description,
             ZoneName = port.Zone.ToString(),
+            BackgroundTexturePath = port.BackgroundTexturePath,
+            MusicTrackId = port.MusicTrackId,
             Credits = run.Player.Credits,
             CargoLoad = _economyService.GetCargoLoad(run),
             CargoLimit = run.Player.CargoLimit,
@@ -313,6 +349,8 @@ public partial class AppController : Node
         return new TradeScreenViewModel
         {
             PortName = port.Name,
+            BackgroundTexturePath = port.TradeBackgroundPath,
+            MusicTrackId = port.MusicTrackId,
             Credits = run.Player.Credits,
             CargoLoad = _economyService.GetCargoLoad(run),
             CargoLimit = run.Player.CargoLimit,
@@ -334,6 +372,7 @@ public partial class AppController : Node
                 Name = destination.Name,
                 ZoneName = destination.Zone.ToString(),
                 Description = destination.Description,
+                PreviewTexturePath = destination.PreviewTexturePath,
                 TravelCost = _travelService.GetTravelCost(currentPort, destination),
             })
             .ToList();
@@ -341,6 +380,7 @@ public partial class AppController : Node
         return new TravelScreenViewModel
         {
             CurrentPortName = currentPort.Name,
+            BackgroundTexturePath = "res://assets/ui/cockpit.png",
             Credits = run.Player.Credits,
             Destinations = destinations,
             StatusMessage = string.IsNullOrWhiteSpace(statusMessage)
@@ -383,6 +423,7 @@ public partial class AppController : Node
             ? _tradeService.Buy(run, market, item, quantity)
             : _tradeService.Sell(run, market, item, quantity);
 
+        _audioService?.PlaySfx("click");
         _gameSession.SaveCurrentRun();
         RefreshTradeScreen(result.Message);
 
@@ -435,6 +476,7 @@ public partial class AppController : Node
             DurationSeconds = 2.0 + (zoneDifference * 1.5),
         };
 
+        _audioService?.PlaySfx("click");
         NavigateTo(AppRoute.TravelAnimation);
     }
 
@@ -516,5 +558,40 @@ public partial class AppController : Node
             $"Sellable cargo value: {cargoValue}\n" +
             $"Cheapest travel cost: {cheapestTravel}\n\n" +
             $"No route remains that your current cash and cargo can cover.";
+    }
+
+    private void PlayRouteMusic(AppRoute route)
+    {
+        if (_audioService is null)
+        {
+            return;
+        }
+
+        string? trackId = route switch
+        {
+            AppRoute.MainMenu => "singularity",
+            AppRoute.GameOver => "singularity",
+            AppRoute.PortOverview or AppRoute.Trade => ResolveCurrentRunMusic(),
+            AppRoute.Travel or AppRoute.TravelAnimation => "world_default",
+            _ => null,
+        };
+
+        if (!string.IsNullOrWhiteSpace(trackId))
+        {
+            _audioService.PlayMusic(trackId);
+        }
+    }
+
+    private string ResolveCurrentRunMusic()
+    {
+        if (_gameSession?.CurrentRun is not RunState run || _dataRepository is null)
+        {
+            return "singularity";
+        }
+
+        return _dataRepository.Snapshot.PortsById.TryGetValue(run.Player.CurrentPortId, out PortDefinition? port) &&
+               !string.IsNullOrWhiteSpace(port.MusicTrackId)
+            ? port.MusicTrackId
+            : "world_default";
     }
 }

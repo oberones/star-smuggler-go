@@ -13,6 +13,8 @@ public partial class TravelAnimationScreen : Control
     private Label? _statusLabel;
     private ProgressBar? _progressBar;
     private Button? _skipButton;
+    private TextureRect? _backdrop;
+    private TextureRect? _ship;
     private ColorRect? _starsA;
     private ColorRect? _starsB;
 
@@ -23,11 +25,13 @@ public partial class TravelAnimationScreen : Control
 
     public override void _Ready()
     {
+        _backdrop = GetNodeOrNull<TextureRect>("%Backdrop");
         _routeLabel = GetNodeOrNull<Label>("%RouteLabel");
         _costLabel = GetNodeOrNull<Label>("%CostLabel");
         _statusLabel = GetNodeOrNull<Label>("%StatusLabel");
         _progressBar = GetNodeOrNull<ProgressBar>("%ProgressBar");
         _skipButton = GetNodeOrNull<Button>("%SkipButton");
+        _ship = GetNodeOrNull<TextureRect>("%Ship");
         _starsA = GetNodeOrNull<ColorRect>("StarsA");
         _starsB = GetNodeOrNull<ColorRect>("StarsB");
 
@@ -76,6 +80,13 @@ public partial class TravelAnimationScreen : Control
             _routeLabel.Text = $"{_viewModel.OriginName} -> {_viewModel.DestinationName}";
         }
 
+        if (_backdrop is not null)
+        {
+            _backdrop.Texture = string.IsNullOrWhiteSpace(_viewModel.BackgroundTexturePath)
+                ? null
+                : ResourceLoader.Load<Texture2D>(_viewModel.BackgroundTexturePath);
+        }
+
         if (_costLabel is not null)
         {
             _costLabel.Text = $"Travel cost: {_viewModel.TravelCost} credits";
@@ -109,6 +120,12 @@ public partial class TravelAnimationScreen : Control
         if (_starsB is not null)
         {
             _starsB.Position = new Vector2((float)(-120.0 + (progress * 150.0)), _starsB.Position.Y);
+        }
+
+        if (_ship is not null)
+        {
+            _ship.Position = new Vector2((float)(140.0 + (progress * 420.0)), _ship.Position.Y);
+            _ship.Modulate = new Color(1f, 1f, 1f, 0.75f + ((float)progress * 0.25f));
         }
     }
 

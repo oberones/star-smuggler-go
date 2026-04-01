@@ -19,6 +19,8 @@ public partial class TravelScreen : Control
     private Label? _descriptionLabel;
     private Label? _costLabel;
     private Label? _statusLabel;
+    private TextureRect? _backdrop;
+    private TextureRect? _previewTexture;
     private Button? _travelButton;
     private Button? _backButton;
 
@@ -28,6 +30,7 @@ public partial class TravelScreen : Control
 
     public override void _Ready()
     {
+        _backdrop = GetNodeOrNull<TextureRect>("%Backdrop");
         _titleLabel = GetNodeOrNull<Label>("%TitleLabel");
         _summaryLabel = GetNodeOrNull<Label>("%SummaryLabel");
         _destinationList = GetNodeOrNull<ItemList>("%DestinationList");
@@ -36,6 +39,7 @@ public partial class TravelScreen : Control
         _descriptionLabel = GetNodeOrNull<Label>("%DescriptionLabel");
         _costLabel = GetNodeOrNull<Label>("%CostLabel");
         _statusLabel = GetNodeOrNull<Label>("%StatusLabel");
+        _previewTexture = GetNodeOrNull<TextureRect>("%PreviewTexture");
         _travelButton = GetNodeOrNull<Button>("%TravelButton");
         _backButton = GetNodeOrNull<Button>("%BackButton");
 
@@ -80,6 +84,13 @@ public partial class TravelScreen : Control
             _titleLabel.Text = $"Travel From {_viewModel.CurrentPortName}";
         }
 
+        if (_backdrop is not null)
+        {
+            _backdrop.Texture = string.IsNullOrWhiteSpace(_viewModel.BackgroundTexturePath)
+                ? null
+                : ResourceLoader.Load<Texture2D>(_viewModel.BackgroundTexturePath);
+        }
+
         if (_summaryLabel is not null)
         {
             _summaryLabel.Text = $"Available credits: {_viewModel.Credits}";
@@ -112,6 +123,7 @@ public partial class TravelScreen : Control
         _viewModel = new TravelScreenViewModel
         {
             CurrentPortName = _viewModel.CurrentPortName,
+            BackgroundTexturePath = _viewModel.BackgroundTexturePath,
             Credits = _viewModel.Credits,
             Destinations = _viewModel.Destinations,
             StatusMessage = message,
@@ -145,6 +157,7 @@ public partial class TravelScreen : Control
             if (_zoneLabel is not null) _zoneLabel.Text = string.Empty;
             if (_descriptionLabel is not null) _descriptionLabel.Text = string.Empty;
             if (_costLabel is not null) _costLabel.Text = string.Empty;
+            if (_previewTexture is not null) _previewTexture.Texture = null;
             return;
         }
 
@@ -152,6 +165,12 @@ public partial class TravelScreen : Control
         if (_zoneLabel is not null) _zoneLabel.Text = $"{destination.ZoneName} Zone";
         if (_descriptionLabel is not null) _descriptionLabel.Text = destination.Description;
         if (_costLabel is not null) _costLabel.Text = $"Travel cost: {destination.TravelCost} credits";
+        if (_previewTexture is not null)
+        {
+            _previewTexture.Texture = string.IsNullOrWhiteSpace(destination.PreviewTexturePath)
+                ? null
+                : ResourceLoader.Load<Texture2D>(destination.PreviewTexturePath);
+        }
     }
 
     private TravelDestinationViewModel? GetSelectedDestination()

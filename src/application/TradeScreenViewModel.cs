@@ -5,6 +5,8 @@ namespace StarSmugglerGo.Application;
 public sealed class TradeScreenViewModel
 {
     public string PortName { get; init; } = string.Empty;
+    public string BackgroundTexturePath { get; init; } = string.Empty;
+    public string MusicTrackId { get; init; } = string.Empty;
     public int Credits { get; init; }
     public int CargoLoad { get; init; }
     public int CargoLimit { get; init; }

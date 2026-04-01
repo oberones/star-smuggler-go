@@ -6,6 +6,7 @@ namespace StarSmugglerGo.Presentation.Screens;
 
 public partial class PortOverviewScreen : Control
 {
+    private TextureRect? _backdrop;
     [Signal]
     public delegate void BackRequestedEventHandler();
 
@@ -30,6 +31,7 @@ public partial class PortOverviewScreen : Control
 
     public override void _Ready()
     {
+        _backdrop = GetNodeOrNull<TextureRect>("%Backdrop");
         _portNameLabel = GetNodeOrNull<Label>("%PortNameLabel");
         _zoneLabel = GetNodeOrNull<Label>("%ZoneLabel");
         _descriptionLabel = GetNodeOrNull<Label>("%DescriptionLabel");
@@ -82,6 +84,13 @@ public partial class PortOverviewScreen : Control
         if (_portNameLabel is not null)
         {
             _portNameLabel.Text = _viewModel.PortName;
+        }
+
+        if (_backdrop is not null)
+        {
+            _backdrop.Texture = string.IsNullOrWhiteSpace(_viewModel.BackgroundTexturePath)
+                ? null
+                : ResourceLoader.Load<Texture2D>(_viewModel.BackgroundTexturePath);
         }
 
         if (_zoneLabel is not null)

@@ -11,14 +11,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.054902, 0.0705882, 0.101961, 1)
+expand_mode = 1
+stretch_mode = 6
 
 [node name="OuterMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -133,4 +135,3 @@ size_flags_vertical = 3
 theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 text = "Goods list"
-

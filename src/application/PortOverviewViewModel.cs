@@ -7,6 +7,8 @@ public sealed class PortOverviewViewModel
     public string PortName { get; init; } = string.Empty;
     public string PortDescription { get; init; } = string.Empty;
     public string ZoneName { get; init; } = string.Empty;
+    public string BackgroundTexturePath { get; init; } = string.Empty;
+    public string MusicTrackId { get; init; } = string.Empty;
     public int Credits { get; init; }
     public int CargoLoad { get; init; }
     public int CargoLimit { get; init; }

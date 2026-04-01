@@ -5,6 +5,7 @@ namespace StarSmugglerGo.Presentation.Screens;
 
 public partial class TradeScreen : Control
 {
+    private TextureRect? _backdrop;
     [Signal]
     public delegate void BackRequestedEventHandler();
 
@@ -33,6 +34,7 @@ public partial class TradeScreen : Control
 
     public override void _Ready()
     {
+        _backdrop = GetNodeOrNull<TextureRect>("%Backdrop");
         _titleLabel = GetNodeOrNull<Label>("%TitleLabel");
         _summaryLabel = GetNodeOrNull<Label>("%SummaryLabel");
         _itemList = GetNodeOrNull<ItemList>("%ItemList");
@@ -90,6 +92,13 @@ public partial class TradeScreen : Control
         if (_titleLabel is not null)
         {
             _titleLabel.Text = $"Trading At {_viewModel.PortName}";
+        }
+
+        if (_backdrop is not null)
+        {
+            _backdrop.Texture = string.IsNullOrWhiteSpace(_viewModel.BackgroundTexturePath)
+                ? null
+                : ResourceLoader.Load<Texture2D>(_viewModel.BackgroundTexturePath);
         }
 
         if (_summaryLabel is not null)

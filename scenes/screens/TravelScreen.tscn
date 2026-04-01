@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/presentation/screens/TravelScreen.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/cockpit.png" id="2_cockpit"]
 
 [node name="TravelScreen" type="Control"]
 layout_mode = 3
@@ -11,14 +12,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0392157, 0.0509804, 0.0784314, 1)
+texture = ExtResource("2_cockpit")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="OuterMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -129,6 +133,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 text = "Description"
+
+[node name="PreviewTexture" type="TextureRect" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="CostLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
 unique_name_in_owner = true

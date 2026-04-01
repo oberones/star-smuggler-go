@@ -34,6 +34,12 @@ script = ExtResource("5_save")
 unique_name_in_owner = true
 script = ExtResource("6_audio")
 
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="Services/AudioService"]
+bus = &"Master"
+
+[node name="SfxPlayer" type="AudioStreamPlayer" parent="Services/AudioService"]
+bus = &"Master"
+
 [node name="AppController" type="Node" parent="."]
 script = ExtResource("2_controller")
 
@@ -47,4 +53,3 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-

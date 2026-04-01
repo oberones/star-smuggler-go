@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/presentation/screens/TravelAnimationScreen.cs" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/screens/travel_background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/screens/ship_animation.png" id="3_ship"]
 
 [node name="TravelAnimationScreen" type="Control"]
 layout_mode = 3
@@ -11,14 +13,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.027451, 0.0352941, 0.0705882, 1)
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="StarsA" type="ColorRect" parent="."]
 layout_mode = 1
@@ -39,6 +44,16 @@ grow_vertical = 2
 offset_left = -120.0
 offset_right = -120.0
 color = Color(0.196078, 0.301961, 0.486275, 0.12)
+
+[node name="Ship" type="TextureRect" parent="."]
+unique_name_in_owner = true
+offset_left = 140.0
+offset_top = 92.0
+offset_right = 364.0
+offset_bottom = 220.0
+texture = ExtResource("3_ship")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="CenterMargin" type="MarginContainer" parent="."]
 layout_mode = 1
