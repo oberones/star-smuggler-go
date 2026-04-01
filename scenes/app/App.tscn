@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/AppRoot.cs" id="1_root"]
+[ext_resource type="Script" path="res://src/application/AppController.cs" id="2_controller"]
+[ext_resource type="Script" path="res://src/autoload/GameSession.cs" id="3_session"]
+[ext_resource type="Script" path="res://src/autoload/DataRepository.cs" id="4_data"]
+[ext_resource type="Script" path="res://src/autoload/SaveService.cs" id="5_save"]
+[ext_resource type="Script" path="res://src/autoload/AudioService.cs" id="6_audio"]
+
+[node name="App" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_root")
+
+[node name="Services" type="Node" parent="."]
+
+[node name="GameSession" type="Node" parent="Services"]
+unique_name_in_owner = true
+script = ExtResource("3_session")
+
+[node name="DataRepository" type="Node" parent="Services"]
+unique_name_in_owner = true
+script = ExtResource("4_data")
+
+[node name="SaveService" type="Node" parent="Services"]
+unique_name_in_owner = true
+script = ExtResource("5_save")
+
+[node name="AudioService" type="Node" parent="Services"]
+unique_name_in_owner = true
+script = ExtResource("6_audio")
+
+[node name="AppController" type="Node" parent="."]
+script = ExtResource("2_controller")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScreenHost" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+

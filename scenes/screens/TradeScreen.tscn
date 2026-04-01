@@ -1,0 +1,189 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/screens/TradeScreen.cs" id="1_script"]
+
+[node name="TradeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0470588, 0.0588235, 0.0823529, 1)
+
+[node name="OuterMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = 48.0
+offset_right = -48.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="OuterMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="HeaderPanel" type="PanelContainer" parent="OuterMargin/VBox"]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="OuterMargin/VBox/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="HeaderVBox" type="VBoxContainer" parent="OuterMargin/VBox/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="OuterMargin/VBox/HeaderPanel/HeaderMargin/HeaderVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "Trade"
+
+[node name="SummaryLabel" type="Label" parent="OuterMargin/VBox/HeaderPanel/HeaderMargin/HeaderVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+text = "Credits and cargo summary"
+
+[node name="ContentRow" type="HBoxContainer" parent="OuterMargin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="ItemsPanel" type="PanelContainer" parent="OuterMargin/VBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemsMargin" type="MarginContainer" parent="OuterMargin/VBox/ContentRow/ItemsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ItemsVBox" type="VBoxContainer" parent="OuterMargin/VBox/ContentRow/ItemsPanel/ItemsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ItemsTitle" type="Label" parent="OuterMargin/VBox/ContentRow/ItemsPanel/ItemsMargin/ItemsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Market"
+
+[node name="ItemList" type="ItemList" parent="OuterMargin/VBox/ContentRow/ItemsPanel/ItemsMargin/ItemsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DetailsPanel" type="PanelContainer" parent="OuterMargin/VBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DetailsMargin" type="MarginContainer" parent="OuterMargin/VBox/ContentRow/DetailsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="DetailsVBox" type="VBoxContainer" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="SelectedItemLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Select an item"
+
+[node name="DescriptionLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+text = "Item description"
+
+[node name="PriceLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Price"
+
+[node name="OwnedLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Owned"
+
+[node name="QuantityRow" type="HBoxContainer" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="QuantityLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox/QuantityRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Quantity"
+
+[node name="QuantitySpinBox" type="SpinBox" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox/QuantityRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 99.0
+step = 1.0
+value = 1.0
+
+[node name="ActionRow" type="HBoxContainer" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BuyButton" type="Button" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 48)
+layout_mode = 2
+text = "Buy"
+
+[node name="SellButton" type="Button" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 48)
+layout_mode = 2
+text = "Sell"
+
+[node name="StatusLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+text = "Trade status"
+
+[node name="FooterRow" type="HBoxContainer" parent="OuterMargin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="OuterMargin/VBox/FooterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 52)
+layout_mode = 2
+text = "Back To Port"
+

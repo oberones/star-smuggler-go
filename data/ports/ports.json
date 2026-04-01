@@ -1,0 +1,92 @@
+[
+  {
+    "id": "mercury",
+    "name": "Mercury Foundry Complex",
+    "description": "Blistering factories melt metal near the sun.",
+    "zone": "Inner",
+    "backgroundTexturePath": "res://assets/ports/mercury.png",
+    "previewTexturePath": "res://assets/ports/mercury_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/mercury_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "venus",
+    "name": "Venus Sky Habitats",
+    "description": "Floating cities hover above acid clouds.",
+    "zone": "Inner",
+    "backgroundTexturePath": "res://assets/ports/venus.png",
+    "previewTexturePath": "res://assets/ports/venus_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/venus_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "luna",
+    "name": "Luna Central Station",
+    "description": "The heart of the Sol system, bustling with trade.",
+    "zone": "Inner",
+    "backgroundTexturePath": "res://assets/ports/luna.png",
+    "previewTexturePath": "res://assets/ports/luna_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/luna_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "mars",
+    "name": "New Lagos, Mars",
+    "description": "Martian frontier full of miners and misfits.",
+    "zone": "Inner",
+    "backgroundTexturePath": "res://assets/ports/mars.png",
+    "previewTexturePath": "res://assets/ports/mars_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/mars_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "ceres",
+    "name": "Ceres Free Port",
+    "description": "Neutral ground for traders and asteroid miners.",
+    "zone": "Outer",
+    "backgroundTexturePath": "res://assets/ports/ceres.png",
+    "previewTexturePath": "res://assets/ports/ceres_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/ceres_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "europa",
+    "name": "Europa Ice Docks",
+    "description": "Subsurface ocean labs and illicit biotrade.",
+    "zone": "Outer",
+    "backgroundTexturePath": "res://assets/ports/europa.png",
+    "previewTexturePath": "res://assets/ports/europa_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/europa_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "titan",
+    "name": "Titan Outpost",
+    "description": "Foggy noir smuggler den under the massive eye of Saturn.",
+    "zone": "Outer",
+    "backgroundTexturePath": "res://assets/ports/titan.png",
+    "previewTexturePath": "res://assets/ports/titan_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/titan_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "pluto",
+    "name": "Pluto Relic Vault",
+    "description": "Forbidden site of ancient tech discoveries.",
+    "zone": "Fringe",
+    "backgroundTexturePath": "res://assets/ports/pluto.png",
+    "previewTexturePath": "res://assets/ports/pluto_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/pluto_trade.png",
+    "musicTrackId": "world_default"
+  },
+  {
+    "id": "kuiper",
+    "name": "Kuiper Flotilla",
+    "description": "Nomadic pirate fleet beyond Neptune.",
+    "zone": "Fringe",
+    "backgroundTexturePath": "res://assets/ports/kuiper.png",
+    "previewTexturePath": "res://assets/ports/kuiper_preview.png",
+    "tradeBackgroundPath": "res://assets/trade/kuiper_trade.png",
+    "musicTrackId": "world_default"
+  }
+]

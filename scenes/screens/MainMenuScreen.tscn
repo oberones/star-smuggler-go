@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/screens/MainMenuScreen.cs" id="1_script"]
+
+[node name="MainMenuScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0431373, 0.054902, 0.0901961, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="Panel" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="MarginContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "StarSmuggler"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="MarginContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Godot Phase 0 bootstrap: routing, run state, and UI structure are live."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer" type="Control" parent="MarginContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="MarginContainer/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+text = "Start New Run"
+
+[node name="QuitButton" type="Button" parent="MarginContainer/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+text = "Quit"
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Waiting for the first gameplay slice."
+horizontal_alignment = 1
+autowrap_mode = 3
+

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "customs_shakedown",
+    "name": "Customs Shake-Down",
+    "descriptionTemplate": "Local security stops you for a 'random inspection' and demands a bribe of {credits} credits.",
+    "effectType": "CreditsLossScaled",
+    "weight": 1,
+    "parameters": {
+      "minimum": 25,
+      "maximum": 100,
+      "minPercent": 0.05,
+      "maxPercent": 0.15
+    }
+  },
+  {
+    "id": "merchant_strike",
+    "name": "Merchant Strike",
+    "descriptionTemplate": "Local vendors are striking. Prices for all goods at this port surge temporarily.",
+    "effectType": "PortPriceMultiplier",
+    "weight": 1,
+    "parameters": {
+      "multiplier": 2.0
+    }
+  },
+  {
+    "id": "market_glut",
+    "name": "Market Glut",
+    "descriptionTemplate": "A recent cargo dump flooded the market for {itemName}.",
+    "effectType": "SingleItemPriceMultiplier",
+    "weight": 1,
+    "parameters": {
+      "multiplier": 0.5
+    }
+  },
+  {
+    "id": "lost_cargo",
+    "name": "Lost Cargo",
+    "descriptionTemplate": "A member of the crew opened the wrong cargo bay. You lose 1 unit of {itemName}.",
+    "effectType": "LoseRandomCargo",
+    "weight": 1,
+    "parameters": {}
+  },
+  {
+    "id": "pirate_ambush",
+    "name": "Pirate Ambush",
+    "descriptionTemplate": "Pirates intercept your ship and force you to hand over {credits} credits.",
+    "effectType": "CreditsLossScaled",
+    "weight": 1,
+    "parameters": {
+      "minimum": 50,
+      "maximum": 200,
+      "minPercent": 0.10,
+      "maxPercent": 0.25
+    }
+  },
+  {
+    "id": "engine_malfunction",
+    "name": "Engine Malfunction",
+    "descriptionTemplate": "Your ship's engine malfunctions and repairs cost {credits} credits.",
+    "effectType": "CreditsLossScaled",
+    "weight": 1,
+    "parameters": {
+      "minimum": 100,
+      "maximum": 300,
+      "minPercent": 0.08,
+      "maxPercent": 0.20
+    }
+  },
+  {
+    "id": "crew_mutiny",
+    "name": "Crew Mutiny",
+    "descriptionTemplate": "Your crew demands higher wages, costing you {credits} credits to settle things down.",
+    "effectType": "CreditsLossScaled",
+    "weight": 1,
+    "parameters": {
+      "minimum": 50,
+      "maximum": 150,
+      "minPercent": 0.06,
+      "maxPercent": 0.18
+    }
+  }
+]

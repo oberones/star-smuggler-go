@@ -1,0 +1,128 @@
+[
+  {
+    "id": "synthspice",
+    "name": "Synthspice",
+    "description": "Mass-produced mood enhancer popular in clubs.",
+    "rarity": "Common",
+    "basePrice": 40
+  },
+  {
+    "id": "alloy",
+    "name": "Reclaimed Alloys",
+    "description": "Scrap metal salvaged from derelict ships.",
+    "rarity": "Common",
+    "basePrice": 30
+  },
+  {
+    "id": "stimpatches",
+    "name": "Stimpatches",
+    "description": "Performance-enhancing dermal patches.",
+    "rarity": "Common",
+    "basePrice": 55
+  },
+  {
+    "id": "holochips",
+    "name": "Holochips",
+    "description": "Cheap holographic entertainment modules.",
+    "rarity": "Common",
+    "basePrice": 25
+  },
+  {
+    "id": "plasteel_scraps",
+    "name": "Plasteel Scraps",
+    "description": "Lightweight and durable construction material.",
+    "rarity": "Common",
+    "basePrice": 35
+  },
+  {
+    "id": "medigel",
+    "name": "Medigel",
+    "description": "Basic medical gel for treating minor injuries.",
+    "rarity": "Common",
+    "basePrice": 50
+  },
+  {
+    "id": "neurodust",
+    "name": "Neurodust",
+    "description": "Hallucinogenic powder with precognition effects.",
+    "rarity": "MidTier",
+    "basePrice": 150
+  },
+  {
+    "id": "void_silk",
+    "name": "Void Silk",
+    "description": "Luxury zero-G fabric harvested from orbital spiders.",
+    "rarity": "MidTier",
+    "basePrice": 220
+  },
+  {
+    "id": "quantum_seeds",
+    "name": "Quantum Seeds",
+    "description": "Encrypted gene seeds for forbidden crops.",
+    "rarity": "MidTier",
+    "basePrice": 280
+  },
+  {
+    "id": "neural_implants",
+    "name": "Neural Implants",
+    "description": "Black-market dream recorders and enhancers.",
+    "rarity": "MidTier",
+    "basePrice": 320
+  },
+  {
+    "id": "grav_crystals",
+    "name": "Grav Crystals",
+    "description": "Crystals used in advanced anti-gravity tech.",
+    "rarity": "MidTier",
+    "basePrice": 200
+  },
+  {
+    "id": "biofoam",
+    "name": "Biofoam",
+    "description": "Advanced healing foam for emergency surgeries.",
+    "rarity": "MidTier",
+    "basePrice": 260
+  },
+  {
+    "id": "enceladite",
+    "name": "Enceladite",
+    "description": "Highly unstable energy ore from Enceladus.",
+    "rarity": "Exotic",
+    "basePrice": 800
+  },
+  {
+    "id": "cryobloom_spores",
+    "name": "Cryobloom Spores",
+    "description": "Bioluminescent Europa spores with medicinal uses.",
+    "rarity": "Exotic",
+    "basePrice": 950
+  },
+  {
+    "id": "temporal_relics",
+    "name": "Temporal Relics",
+    "description": "Artifacts with rumored time-warping properties.",
+    "rarity": "Exotic",
+    "basePrice": 1200
+  },
+  {
+    "id": "darkmatter_shards",
+    "name": "Darkmatter Shards",
+    "description": "Fragments of condensed dark matter with unusual properties.",
+    "rarity": "Exotic",
+    "basePrice": 1400
+  },
+  {
+    "id": "starlight_essence",
+    "name": "Starlight Essence",
+    "description": "Rare liquid light extracted from dying micro-stars.",
+    "rarity": "Exotic",
+    "basePrice": 1800
+  },
+  {
+    "id": "aetherium_core",
+    "name": "Aetherium Core",
+    "description": "Energy core rumored to power ancient alien tech.",
+    "rarity": "Exotic",
+    "basePrice": 4000
+  }
+]
