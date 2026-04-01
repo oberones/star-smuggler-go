@@ -8,4 +8,5 @@ public enum AppRoute
     Trade = 3,
     Travel = 4,
     GameOver = 5,
+    TravelAnimation = 6,
 }

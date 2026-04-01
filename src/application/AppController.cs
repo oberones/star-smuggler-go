@@ -16,6 +16,7 @@ public partial class AppController : Node
     private const string TradeScenePath = "res://scenes/screens/TradeScreen.tscn";
     private const string TravelScenePath = "res://scenes/screens/TravelScreen.tscn";
     private const string GameOverScenePath = "res://scenes/screens/GameOverScreen.tscn";
+    private const string TravelAnimationScenePath = "res://scenes/screens/TravelAnimationScreen.tscn";
 
     private readonly EconomyService _economyService = new();
     private readonly TravelService _travelService = new();
@@ -32,6 +33,7 @@ public partial class AppController : Node
     private DataRepository? _dataRepository;
     private SaveService? _saveService;
     private Control? _currentScreen;
+    private PendingTravelRequest? _pendingTravelRequest;
 
     public AppRoute CurrentRoute { get; private set; } = AppRoute.None;
 
@@ -66,6 +68,7 @@ public partial class AppController : Node
             AppRoute.Trade => CreateTradeScreen(),
             AppRoute.Travel => CreateTravelScreen(),
             AppRoute.GameOver => CreateGameOverScreen(),
+            AppRoute.TravelAnimation => CreateTravelAnimationScreen(),
             _ => null,
         };
 
@@ -214,6 +217,40 @@ public partial class AppController : Node
         screen.SetSummary(BuildGameOverSummary(run, _dataRepository.Snapshot));
         screen.RestartRequested += OnStartRequested;
         screen.MenuRequested += () => NavigateTo(AppRoute.MainMenu);
+        return screen;
+    }
+
+    private Control? CreateTravelAnimationScreen()
+    {
+        if (_pendingTravelRequest is null || _dataRepository is null)
+        {
+            GD.PushError("AppController cannot open TravelAnimation without a pending travel request.");
+            return null;
+        }
+
+        if (!_dataRepository.Snapshot.PortsById.TryGetValue(_pendingTravelRequest.OriginPortId, out PortDefinition? origin) ||
+            !_dataRepository.Snapshot.PortsById.TryGetValue(_pendingTravelRequest.DestinationPortId, out PortDefinition? destination))
+        {
+            GD.PushError("AppController could not resolve travel animation endpoints.");
+            return null;
+        }
+
+        PackedScene? scene = ResourceLoader.Load<PackedScene>(TravelAnimationScenePath);
+        if (scene?.Instantiate() is not TravelAnimationScreen screen)
+        {
+            GD.PushError($"AppController failed to load '{TravelAnimationScenePath}'.");
+            return null;
+        }
+
+        screen.Bind(new TravelAnimationViewModel
+        {
+            OriginName = origin.Name,
+            DestinationName = destination.Name,
+            TravelCost = _pendingTravelRequest.TravelCost,
+            DurationSeconds = _pendingTravelRequest.DurationSeconds,
+            StatusMessage = "Engines hot. Hold course or skip once you're ready.",
+        });
+        screen.AnimationFinished += OnTravelAnimationFinished;
         return screen;
     }
 
@@ -389,7 +426,34 @@ public partial class AppController : Node
             return;
         }
 
-        run.Player.Credits -= cost;
+        int zoneDifference = Math.Abs((int)origin.Zone - (int)destination.Zone);
+        _pendingTravelRequest = new PendingTravelRequest
+        {
+            OriginPortId = origin.Id,
+            DestinationPortId = destination.Id,
+            TravelCost = cost,
+            DurationSeconds = 2.0 + (zoneDifference * 1.5),
+        };
+
+        NavigateTo(AppRoute.TravelAnimation);
+    }
+
+    private void OnTravelAnimationFinished()
+    {
+        if (_gameSession?.CurrentRun is not RunState run || _dataRepository is null || _pendingTravelRequest is null)
+        {
+            return;
+        }
+
+        DataSnapshot data = _dataRepository.Snapshot;
+        if (!data.PortsById.TryGetValue(_pendingTravelRequest.DestinationPortId, out PortDefinition? destination))
+        {
+            _pendingTravelRequest = null;
+            NavigateTo(AppRoute.Travel);
+            return;
+        }
+
+        run.Player.Credits -= _pendingTravelRequest.TravelCost;
         run.Player.CurrentPortId = destination.Id;
         run.JumpsSinceLastUpdate++;
 
@@ -404,6 +468,7 @@ public partial class AppController : Node
 
         run.RecentEvent = _eventService.TryResolveTravelEvent(run, data, _economyService, _random);
         _gameSession.SaveCurrentRun();
+        _pendingTravelRequest = null;
         NavigateTo(RouteForCurrentRun());
     }
 
