@@ -36,6 +36,7 @@ type App struct {
 	runtime        services.RuntimeContext
 	route          Route
 	snapshot       domain.DataSnapshot
+	activeRun      *domain.RunState
 }
 
 func NewApp(contentLoader ContentLoader, saveRepository SaveRepository, runtime services.RuntimeContext) *App {
@@ -72,6 +73,10 @@ func (a *App) Navigate(route Route) {
 
 func (a *App) Snapshot() domain.DataSnapshot {
 	return a.snapshot
+}
+
+func (a *App) ActiveRun() *domain.RunState {
+	return a.activeRun
 }
 
 func (a *App) Save(ctx context.Context, run domain.RunState) error {
