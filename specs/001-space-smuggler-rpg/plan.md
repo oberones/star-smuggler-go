@@ -5,7 +5,7 @@
 
 ## Summary
 
-Build the Go + `go-dot` version of StarSmuggler by using the existing MonoGame project at `/Users/oberon/Projects/coding/monogame/StarSmuggler` as the initial MVP reference. The first milestone is not a redesign. It is a faithful port of the current playable loop, visual composition, music behavior, screen flow, and content set into a maintainable Go architecture that keeps domain logic outside Godot scene scripts. Once parity is achieved, deeper story, faction, mission, and progression systems will be layered on top of the preserved core loop.
+Build the Go + `go-dot` version of StarSmuggler by using the existing MonoGame project at `/Users/oberon/Projects/coding/monogame/StarSmuggler` as the initial MVP reference. The first milestone is not a redesign. It is a faithful port of the current playable loop, visual composition, music behavior, screen flow, and content set into a maintainable Go architecture that keeps domain logic outside Godot scene scripts. The MVP is strict parity with the MonoGame loop; deeper story, faction, mission, and progression systems begin in the next milestone.
 
 ## Technical Context
 
@@ -17,7 +17,7 @@ Build the Go + `go-dot` version of StarSmuggler by using the existing MonoGame p
 **Project Type**: Single-player desktop game using Godot scenes plus internal Go gameplay packages  
 **Performance Goals**: Stable 60 FPS on the MVP screens, no visible stutter on route changes, no avoidable resource reload hitches during menu navigation, travel animation, or audio transitions  
 **Constraints**: Must preserve the MonoGame look and feel as closely as practical, must keep `go-dot` adapters thin, must keep core gameplay deterministic and testable outside scene callbacks, must continue using custom graphics, animations, sound, and music  
-**Scale/Scope**: Initial MVP includes 6 core screens, 9 ports, 18 items, 7 travel events, save/load, music/SFX transitions, and one lightweight narrative spine layered over the original trading loop
+**Scale/Scope**: Initial MVP includes 6 core screens, 9 ports, 18 items, 7 travel events, save/load, music/SFX transitions, and the complete MonoGame functional loop with no new narrative systems
 
 ## Constitution Check
 
@@ -109,6 +109,10 @@ tests/
    - `go test ./...`
    - Godot headless launch for scene boot
 5. Mark the current C# Godot implementation as transitional reference, not the target architecture.
+6. Disable the existing C# gameplay path as an active runtime authority once the Go bootstrap is ready:
+   - retain `src/*.cs` only as migration reference material
+   - ensure Godot scenes no longer depend on C# business logic for gameplay state changes
+   - route all gameplay mutations through the Go application layer and `go-dot` bridge
 
 ### Phase 1 - Domain Extraction And Data Contracts
 
@@ -203,10 +207,12 @@ The initial implementation target for this feature is:
 - imported custom art, music, SFX, and travel animation assets
 - save/continue support
 - the same six-screen flow as the MonoGame game
-- a lightweight narrative spine that enriches the existing loop without expanding the screen count
+- for task-planning purposes, MVP completion requires both the core economy loop and the full travel/event loop from the original MonoGame game
+- no required narrative spine in the MVP; story expansion begins immediately after parity is stable
 
 The following are intentionally deferred until parity is stable:
 
+- the first faction-driven narrative spine
 - multiple campaigns or endings
 - combat-heavy systems
 - advanced modding

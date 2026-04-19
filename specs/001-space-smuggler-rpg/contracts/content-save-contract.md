@@ -70,15 +70,16 @@ Define the authored-content and save-data stability rules for the MVP and early 
   - `credits`
   - `cargoLimit`
   - `currentPortId`
-  - `upgradeIds`
 - `cargo`
   - map of `commodityId -> quantity`
 - `markets`
   - per-port market snapshots
 - `recentEventResult`
+- `totalJumps`
 - `jumpsSinceRefresh`
-- `storyFlags`
-- `factionStandings` reserved if the first story spine ships in MVP
+- `upgradeIds` reserved for post-MVP progression expansion
+- `storyFlags` reserved for post-MVP narrative expansion
+- `factionStandings` reserved for post-MVP narrative expansion and not required in the parity MVP save schema
 
 ## Compatibility Rules
 

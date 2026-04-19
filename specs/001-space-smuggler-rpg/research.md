@@ -55,12 +55,12 @@
 - **Alternatives considered**:
   - Keep ad hoc randomization in port/event code. Rejected because it prevents reliable regression testing.
 
-## Decision 8: Define the initial story scope as one narrative spine on top of the old loop
+## Decision 8: Defer narrative expansion until after the parity MVP
 
-- **Decision**: The first deeper-story milestone will add one faction-linked narrative chain that is expressed through trade, missions, and travel events rather than new systems-heavy combat or branching campaigns.
-- **Rationale**: This honors the “deeper gameplay and immersive story” request while keeping MVP risk bounded.
+- **Decision**: The parity MVP will not add a new story spine. Narrative, faction, and mission systems begin immediately after the MonoGame feature set is fully reproduced in Go + `go-dot`.
+- **Rationale**: This keeps the first milestone tightly aligned with the original game and avoids mixing architecture migration with product expansion.
 - **Alternatives considered**:
-  - Make the initial plan purely parity-focused with no narrative extension. Rejected because the feature spec already includes story as a product goal.
+  - Add one lightweight story spine during MVP. Rejected because it changes scope before parity is proven.
   - Attempt multiple factions and endings in the first pass. Rejected because it would swamp the migration effort.
 
 ## Decision 9: Adopt a Go-first testing strategy with Godot smoke verification

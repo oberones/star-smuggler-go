@@ -123,18 +123,18 @@ The data model separates authored content from mutable run state. Authored conte
   - `markets_by_port_id`
   - `discovered_port_ids`
   - `recent_event_result`
-  - `story_state`
-  - `faction_standings`
-  - `active_missions`
-  - `completed_mission_ids`
+  - `story_state` post-MVP expansion
+  - `faction_standings` post-MVP expansion
+  - `active_missions` post-MVP expansion
+  - `completed_mission_ids` post-MVP expansion
   - `rng_seed`
   - `jumps_since_refresh`
-  - `elapsed_days` or equivalent time measure
+  - `total_jumps`
 - **State transitions**:
   - `new_run` -> starter state
   - `trade_applied` -> credits/cargo/market mutation
   - `travel_requested` -> pending route state
-  - `travel_resolved` -> new port, event outcome, time progression
+  - `travel_resolved` -> new port, event outcome, jump progression
   - `mission_updated` -> active/completed/failed mission changes
   - `game_over` -> final locked result state
 
@@ -145,14 +145,14 @@ The data model separates authored content from mutable run state. Authored conte
   - `credits`
   - `cargo_limit`
   - `current_port_id`
-  - `fuel_state` or travel resource state if used
   - `ship_hull_state`
-  - `upgrade_ids`
-  - `specialization_flags`
+  - `upgrade_ids` post-MVP expansion
+  - `specialization_flags` post-MVP expansion
 - **Validation**:
   - credits cannot drop below zero unless explicitly modeled as debt
   - cargo limit must be positive
   - current port must exist
+  - the parity MVP models travel pressure through credits, jump progression, and event risk rather than a separate fuel meter
 
 ### CargoState
 

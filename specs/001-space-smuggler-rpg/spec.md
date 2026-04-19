@@ -33,7 +33,7 @@ As a player moving through the galaxy, I want travel to expose me to new locatio
 
 **Acceptance Scenarios**:
 
-1. **Given** a player selects a destination, **When** travel begins, **Then** the trip consumes time and resources and may trigger an event that changes credits, cargo, ship condition, reputation, or future access.
+1. **Given** a player selects a destination, **When** travel begins, **Then** the trip consumes route cost, advances jump progression, and may trigger an event that changes credits, cargo, ship condition, reputation, or future access.
 2. **Given** a player reaches new sectors over time, **When** they explore farther from the starting region, **Then** they encounter different market profiles, hazards, and opportunities than the safer starter routes.
 3. **Given** a player receives a travel event offering a choice, **When** they choose a response, **Then** the result changes the run state in a way that is reflected in later travel, trade, or story content.
 
@@ -73,7 +73,7 @@ As a player who survives the early game, I want to upgrade my ship, specialize m
 
 ### Edge Cases
 
-- What happens when a player becomes stranded with cargo but no affordable route, fuel, or legal market access?
+- What happens when a player becomes stranded with cargo but no affordable route or legal market access?
 - How does the game handle a travel event that would destroy or confiscate the player’s last remaining source of progression?
 - What happens when story progression depends on a location or faction the player has alienated or lost access to?
 - How does the economy behave if the player repeatedly farms the same short route or attempts to exploit a single profitable commodity?
@@ -88,14 +88,14 @@ As a player who survives the early game, I want to upgrade my ship, specialize m
 - **FR-002**: The system MUST provide multiple trade goods with distinct legality, rarity, price volatility, and regional demand profiles.
 - **FR-003**: The system MUST allow players to buy, sell, hold, and transport goods subject to credits, cargo capacity, location access, and other applicable constraints.
 - **FR-004**: The system MUST provide a star map with multiple ports or regions that differ in market identity, travel cost, danger level, and narrative relevance.
-- **FR-005**: The system MUST require travel between locations to consume meaningful resources such as time, fuel, risk tolerance, or equivalent progression pressure.
+- **FR-005**: The system MUST require travel between locations to consume the same meaningful progression pressures as the MonoGame game: route-based credit cost, jump-count progression, and event risk, with no new fuel or time-management subsystem introduced in the MVP.
 - **FR-006**: The system MUST resolve travel through interactive or outcome-driven events that can affect credits, cargo, ship condition, crew state, faction standing, or story flags.
 - **FR-007**: The system MUST communicate current route options, likely costs, and immediate constraints before the player commits to travel.
 - **FR-008**: The system MUST include at least one persistent story structure composed of factions, named characters, missions, and milestone events tied directly to trading and exploration behavior.
 - **FR-009**: The system MUST allow missions or contracts that require transporting specific goods, meeting deadlines, reaching sectors, or making morally significant decisions.
 - **FR-010**: The system MUST track player relationships or standing with at least one reactive world system such as factions, law enforcement, smugglers, or local authorities.
 - **FR-011**: The system MUST allow progression through ship upgrades, unlocks, or specialization choices that materially change gameplay.
-- **FR-012**: The system MUST define failure states and recovery mechanics for insolvency, stranding, confiscation, or catastrophic travel outcomes.
+- **FR-012**: The system MUST define both true game-over states and at least one recoverable setback path for insolvency, stranding, confiscation, or catastrophic travel outcomes.
 - **FR-013**: The system MUST preserve game state across sessions, including economy, inventory, ship progression, and story progression.
 - **FR-014**: The system MUST present market, travel, and story information in a consistent interface language so the player can understand consequences without relying on hidden rules.
 - **FR-015**: The system MUST support replayable runs by varying market conditions, travel risks, mission availability, or story permutations while preserving a coherent world arc.
@@ -104,7 +104,7 @@ As a player who survives the early game, I want to upgrade my ship, specialize m
 
 ### Key Entities *(include if feature involves data)*
 
-- **RunState**: The complete state of one playthrough, including credits, cargo, ship status, discovered locations, time pressure, and story progress.
+- **RunState**: The complete state of one playthrough, including credits, cargo, ship status, discovered locations, jump progression, and story progress.
 - **PlayerShip**: The player’s vessel, including cargo capacity, travel range, survivability, equipment, and specialization upgrades.
 - **Commodity**: A tradable good with legality, rarity, price behavior, narrative associations, and region-specific desirability.
 - **Port**: A market location with local economy traits, services, faction presence, narrative hooks, and route connections.
@@ -132,5 +132,5 @@ As a player who survives the early game, I want to upgrade my ship, specialize m
 - The player experience is primarily menu-and-scene driven rather than twitch-action combat focused; danger is expressed mainly through strategic travel and encounter decisions.
 - The economy is systemic enough to reward route planning but authored enough to preserve pacing, story beats, and readable player choice.
 - Combat, if present, is secondary to trading, travel, and narrative consequence in the first major milestone.
-- The first playable version emphasizes a strong core loop and one compelling narrative spine before expanding into multiple campaigns or endings.
+- The first playable version targets full functional parity with the MonoGame game before adding narrative, faction, mission, or progression expansion.
 - Accessibility, controller support, and save/continue behavior are in scope for the shipped product, but advanced mod support and online features are out of scope for this feature.

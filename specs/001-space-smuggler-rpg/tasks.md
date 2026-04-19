@@ -40,6 +40,8 @@
 - [ ] T012 Implement save read/write and versioned hydration in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/save_repository.go`
 - [ ] T013 Implement the Go application coordinator and route enum in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/app.go`
 - [ ] T014 Implement the `go-dot` bridge shell for scene registration and route binding in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/app_bridge.go`
+- [ ] T014A Create the C# runtime retirement checklist in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/csharp-runtime-retirement.md`
+- [ ] T014B Audit and disable competing C# runtime authority in `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/application/AppController.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/GameSession.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/DataRepository.cs`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/SaveService.cs`
 - [ ] T015 [P] Add golden tests for content loading in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/golden/content_repository_test.go`
 - [ ] T016 [P] Add save round-trip and version tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/save_repository_test.go`
 - [ ] T017 [P] Add a headless smoke runner script for Godot boot validation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/run_headless_smoke.sh`
@@ -48,15 +50,16 @@
 
 ---
 
-## Phase 3: User Story 1 - Build Profit Through Risky Trading (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - Build Profit Through Risky Trading (Priority: P1) 🎯 MVP Part 1
 
-**Goal**: Deliver a faithful Go-powered port of the MonoGame trading loop: new run, port overview, trade, travel cost preview, save/continue, and stranded evaluation.
+**Goal**: Deliver the economic half of the MonoGame-parity MVP: new run, port overview, trade, baseline inter-port travel, save/continue, and stranded evaluation.
 
 **Independent Test**: Start a new run, inspect the current port, buy and sell goods across at least two ports, save and continue, and confirm that credits, cargo, prices, and game-over checks behave like the MonoGame reference.
 
 ### Tests for User Story 1
 
 - [ ] T018 [P] [US1] Add travel cost parity tests against MonoGame rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_cost_test.go`
+- [ ] T018A [P] [US1] Add tests locking the MVP travel-pressure model to route credit cost, jump-count progression, and event risk in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_pressure_test.go`
 - [ ] T019 [P] [US1] Add market generation and pricing parity tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_service_test.go`
 - [ ] T020 [P] [US1] Add trade transaction and cargo-cap validation tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/trade_service_test.go`
 - [ ] T021 [P] [US1] Add run evaluator tests for stranded and recoverable states in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/run_evaluator_test.go`
@@ -66,9 +69,12 @@
 - [ ] T022 [P] [US1] Implement the run factory and starter state rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/run_factory.go`
 - [ ] T023 [P] [US1] Implement economy rules and market refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_service.go`
 - [ ] T024 [P] [US1] Implement trade validation and transaction application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/trade_service.go`
-- [ ] T025 [P] [US1] Implement travel cost and destination resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/travel_service.go`
+- [ ] T025 [P] [US1] Implement travel cost, route payment validation, and destination resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/travel_service.go`
 - [ ] T026 [P] [US1] Implement run viability and game-over evaluation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/run_evaluator.go`
-- [ ] T027 [US1] Implement application commands for new run, continue, trade, travel preview, and save in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
+- [ ] T026A [P] [US1] Add regression tests for repeated short-route and single-commodity exploit patterns in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_balance_test.go`
+- [ ] T026B [US1] Implement anti-exploit market pressure rules for repeated route farming in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_balance_service.go`
+- [ ] T026C [US1] Integrate exploit-pressure adjustments into market refresh and route resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
+- [ ] T027 [US1] Implement application commands for new run, continue, trade, travel preview, baseline travel commit, and save in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
 - [ ] T028 [P] [US1] Implement main menu presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/main_menu_presenter.go`
 - [ ] T029 [P] [US1] Implement port overview presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
 - [ ] T030 [P] [US1] Implement trade presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/trade_presenter.go`
@@ -76,16 +82,20 @@
 - [ ] T032 [US1] Bind the Go presenters to the existing Godot scenes in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/scene_bindings.go`
 - [ ] T033 [US1] Preserve the MonoGame-faithful MVP route flow and button actions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/MainMenuScreen.tscn`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/PortOverviewScreen.tscn`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TradeScreen.tscn`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelScreen.tscn`
 - [ ] T034 [US1] Implement autosave and continue integration for the MVP loop in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/save_commands.go`
+- [ ] T034A [P] [US1] Add tests for recoverable setback vs. true game-over transitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/failure_state_test.go`
+- [ ] T034B [US1] Implement Game Over route presenter and summary mapping in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/game_over_presenter.go`
+- [ ] T034C [US1] Bind the Go runtime to `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/GameOverScreen.tscn`
+- [ ] T034D [US1] Implement at least one explicit recovery mechanic short of game over in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/recovery_commands.go`
 
-**Checkpoint**: User Story 1 should now be a functional MVP and demoable on its own.
+**Checkpoint**: User Story 1 should now provide the core economy loop and baseline inter-port trading, but the MonoGame-parity MVP is not complete until User Story 2 is finished.
 
 ---
 
-## Phase 4: User Story 2 - Explore A Living Star Map (Priority: P2)
+## Phase 4: User Story 2 - Explore A Living Star Map (Priority: P2) 🎯 MVP Part 2
 
-**Goal**: Make travel feel like meaningful exploration by porting route selection, travel animation timing, and random encounter resolution from the MonoGame game into the Go runtime.
+**Goal**: Complete the MonoGame-parity MVP by porting travel animation timing, random encounter resolution, and the remaining exploration feel from the MonoGame game into the Go runtime.
 
-**Independent Test**: From a working MVP run, choose multiple destinations, observe preview data, complete travel animation transitions, and verify random travel events mutate run state and return the player to a valid next screen.
+**Independent Test**: From a working baseline trading run, choose multiple destinations, observe preview data, complete travel animation transitions, and verify random travel events mutate run state and return the player to a valid next screen.
 
 ### Tests for User Story 2
 
@@ -97,13 +107,13 @@
 
 - [ ] T038 [P] [US2] Implement typed travel event definitions and resolved event results in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/event_types.go`
 - [ ] T039 [P] [US2] Implement event rolling and effect resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/event_service.go`
-- [ ] T040 [US2] Implement travel commit and arrival resolution commands in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/travel_commands.go`
+- [ ] T040 [US2] Extend travel commands with event resolution, jump progression handling, and final arrival refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/travel_commands.go`
 - [ ] T041 [P] [US2] Implement the travel animation presenter and state bridge in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/travel_animation_presenter.go`
 - [ ] T042 [US2] Preserve MonoGame-like travel animation pacing, route labels, and skip behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
 - [ ] T043 [US2] Surface recent event outcomes back into the port overview contract in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
 - [ ] T044 [US2] Ensure travel visuals keep the current cockpit, preview, and terminal composition in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelScreen.tscn` and `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
 
-**Checkpoint**: User Stories 1 and 2 should both work independently, with travel now serving as more than a simple menu jump.
+**Checkpoint**: User Stories 1 and 2 now form the full MonoGame-parity MVP and should be demoable end to end.
 
 ---
 
@@ -177,17 +187,17 @@
 ### Phase Dependencies
 
 - **Phase 1: Setup**: No dependencies, can start immediately
-- **Phase 2: Foundational**: Depends on Setup completion and blocks all story work
-- **Phase 3: User Story 1**: Depends on Foundational completion and defines the MVP
-- **Phase 4: User Story 2**: Depends on User Story 1 runtime foundation because travel resolves against the MVP trading loop
+- **Phase 2: Foundational**: Depends on Setup completion and blocks all user story work
+- **Phase 3: User Story 1**: Depends on Foundational completion and delivers the economy and baseline inter-port half of the MVP
+- **Phase 4: User Story 2**: Depends on User Story 1 runtime foundation and, together with User Story 1, defines the full MVP
 - **Phase 5: User Story 3**: Depends on User Stories 1 and 2 because missions and story consequences must attach to trade and travel outcomes
-- **Phase 6: User Story 4**: Depends on User Story 1 and should follow User Story 3 if upgrades affect mission or faction outcomes
+- **Phase 6: User Story 4**: Depends on MVP completion and should follow User Story 3 if upgrades affect mission or faction outcomes
 - **Phase 7: Polish**: Depends on all desired stories being complete
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Can start after Foundational with no dependency on other stories
-- **User Story 2 (P2)**: Depends on User Story 1’s route, market, and save infrastructure
+- **User Story 2 (P2)**: Depends on User Story 1’s route, market, save, and baseline travel infrastructure
 - **User Story 3 (P3)**: Depends on User Story 1 and 2 state transitions
 - **User Story 4 (P4)**: Depends on User Story 1 and can be integrated after core story/travel behavior is stable
 
@@ -229,19 +239,20 @@ Task: "T026 Implement run evaluation in internal/services/run_evaluator.go"
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP First (User Stories 1 + 2)
 
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational
 3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Compare the Go MVP against the MonoGame trading loop and screen flow
-5. Demo the MVP before adding deeper travel/story/progression work
+4. Complete Phase 4: User Story 2
+5. **STOP and VALIDATE**: Compare the Go MVP against the complete MonoGame six-screen loop
+6. Demo the MVP before adding story or progression work
 
 ### Incremental Delivery
 
 1. Setup + Foundational -> pure Go runtime and Godot bridge ready
-2. User Story 1 -> shippable MVP loop
-3. User Story 2 -> exploration/travel depth
+2. User Story 1 -> economy loop and baseline inter-port trading
+3. User Story 2 -> full MonoGame-parity MVP
 4. User Story 3 -> immersive narrative layer
 5. User Story 4 -> long-term progression
 6. Polish -> parity refinement and performance cleanup
@@ -261,5 +272,5 @@ With multiple contributors:
 
 - `[P]` means the task touches distinct files and should not require unfinished work in the same phase
 - Every story is traced back to the feature spec and can be validated independently
-- User Story 1 is the recommended MVP scope
+- User Stories 1 and 2 together are the recommended MVP scope
 - Preserve the MonoGame look and feel by default; any deviation should be deliberate and documented
