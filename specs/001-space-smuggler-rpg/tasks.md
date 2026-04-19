@@ -125,23 +125,23 @@
 
 ### Tests for User Story 3
 
-- [ ] T045 [P] [US3] Add faction standing transition tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/faction_service_test.go`
-- [ ] T046 [P] [US3] Add mission lifecycle tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/mission_service_test.go`
-- [ ] T047 [P] [US3] Add story arc trigger tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/story_service_test.go`
+- [X] T045 [P] [US3] Add faction standing transition tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/faction_service_test.go`
+- [X] T046 [P] [US3] Add mission lifecycle tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/mission_service_test.go`
+- [X] T047 [P] [US3] Add story arc trigger tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/story_service_test.go`
 
 ### Implementation for User Story 3
 
-- [ ] T048 [P] [US3] Add faction definitions and initial JSON content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/factions/sol_factions.json`
-- [ ] T049 [P] [US3] Add first mission chain content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/missions/intro_smuggling_jobs.json`
-- [ ] T050 [P] [US3] Add first story arc content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/story/intro_arc.json`
-- [ ] T051 [P] [US3] Implement faction runtime state and standing rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/faction_state.go`
-- [ ] T052 [P] [US3] Implement mission runtime state in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/mission_state.go`
-- [ ] T053 [P] [US3] Implement story state and progression flags in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/story_state.go`
-- [ ] T054 [P] [US3] Implement faction standing logic in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/faction_service.go`
-- [ ] T055 [P] [US3] Implement mission acceptance, completion, and failure rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/mission_service.go`
-- [ ] T056 [P] [US3] Implement story arc progression logic in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/story_service.go`
-- [ ] T057 [US3] Integrate mission and story updates into trade and travel command flows in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/story_commands.go`
-- [ ] T058 [US3] Present faction, mission, and story notices through the existing terminal-style screens in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/story_presenter.go`
+- [X] T048 [P] [US3] Add faction definitions and initial JSON content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/factions/sol_factions.json`
+- [X] T049 [P] [US3] Add first mission chain content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/missions/intro_smuggling_jobs.json`
+- [X] T050 [P] [US3] Add first story arc content in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/story/intro_arc.json`
+- [X] T051 [P] [US3] Implement faction runtime state and standing rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/faction_state.go`
+- [X] T052 [P] [US3] Implement mission runtime state in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/mission_state.go`
+- [X] T053 [P] [US3] Implement story state and progression flags in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/story_state.go`
+- [X] T054 [P] [US3] Implement faction standing logic in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/faction_service.go`
+- [X] T055 [P] [US3] Implement mission acceptance, completion, and failure rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/mission_service.go`
+- [X] T056 [P] [US3] Implement story arc progression logic in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/story_service.go`
+- [X] T057 [US3] Integrate mission and story updates into trade and travel command flows in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/story_commands.go`
+- [X] T058 [US3] Present faction, mission, and story notices through the existing terminal-style screens in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/story_presenter.go`
 
 **Checkpoint**: User Story 3 should layer reactive narrative play onto the parity loop without needing new screen types.
 

@@ -47,6 +47,12 @@ func NewSceneBindings(
 	balance services.EconomyBalanceService,
 	runEval services.RunEvaluator,
 ) SceneBindings {
+	storyPresenter := StoryPresenter{
+		Data:     data,
+		Factions: services.FactionService{},
+		Missions: services.MissionService{},
+	}
+
 	return SceneBindings{
 		MainMenu: MainMenuPresenter{},
 		PortOverview: PortOverviewPresenter{
@@ -54,10 +60,12 @@ func NewSceneBindings(
 			Economy: economy,
 			Travel:  travel,
 			RunEval: runEval,
+			Story:   storyPresenter,
 		},
 		Trade: TradePresenter{
 			Data:    data,
 			Economy: economy,
+			Story:   storyPresenter,
 		},
 		Travel: TravelPresenter{
 			Data:    data,

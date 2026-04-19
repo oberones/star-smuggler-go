@@ -9,9 +9,12 @@ import (
 )
 
 const (
-	DefaultPortsPath  = "data/ports/ports.json"
-	DefaultItemsPath  = "data/items/items.json"
-	DefaultEventsPath = "data/events/events.json"
+	DefaultPortsPath    = "data/ports/ports.json"
+	DefaultItemsPath    = "data/items/items.json"
+	DefaultEventsPath   = "data/events/events.json"
+	DefaultFactionsPath = "data/factions/sol_factions.json"
+	DefaultMissionsPath = "data/missions/intro_smuggling_jobs.json"
+	DefaultStoryPath    = "data/story/intro_arc.json"
 )
 
 type Loader interface {

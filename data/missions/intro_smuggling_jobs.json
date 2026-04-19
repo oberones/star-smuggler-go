@@ -1,0 +1,24 @@
+[
+  {
+    "id": "guild_supply_run",
+    "name": "Guild Supply Run",
+    "briefing": "A Free Guild broker needs a quiet delivery of synthspice moved from Mars to Titan before the market closes.",
+    "missionType": "Delivery",
+    "originPortId": "mars",
+    "destinationPortId": "titan",
+    "requiredCommodityId": "synthspice",
+    "requiredQuantity": 2,
+    "deadlineJumpLimit": 4,
+    "reward": {
+      "credits": 180
+    },
+    "failureConsequences": {
+      "factionId": "freeguild",
+      "standingDelta": -5
+    },
+    "unlockConditions": {
+      "factionId": "freeguild",
+      "minimumStanding": "Neutral"
+    }
+  }
+]

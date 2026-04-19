@@ -26,7 +26,14 @@ func TestTravelCommandsResolveArrivalRefreshJumpCountAndEvent(t *testing.T) {
 			"maxPercent": 0.05,
 		},
 	}
-	snapshot := domain.NewDataSnapshot(baseSnapshot.Ports, baseSnapshot.Items, []domain.EventDefinition{creditsLossEvent})
+	snapshot := domain.NewDataSnapshot(
+		baseSnapshot.Ports,
+		baseSnapshot.Items,
+		[]domain.EventDefinition{creditsLossEvent},
+		baseSnapshot.Factions,
+		baseSnapshot.Missions,
+		baseSnapshot.StoryArcs,
+	)
 
 	runCommands := application.NewRunCommands(snapshot, nil, seededRuntime(17))
 	run, err := runCommands.StartNewRun()

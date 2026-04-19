@@ -15,6 +15,7 @@ func (a *App) StartNewRun(ctx context.Context) error {
 	}
 
 	a.activeRun = &run
+	_ = a.storyCommands().SyncAtRunStart(a.activeRun)
 	route, err := a.saveCommands().Autosave(ctx, run)
 	if err != nil {
 		return err
@@ -31,6 +32,7 @@ func (a *App) ContinueSavedRun(ctx context.Context) error {
 	}
 
 	a.activeRun = &run
+	_ = a.storyCommands().SyncAtRunStart(a.activeRun)
 	a.route = route
 	return nil
 }
@@ -79,6 +81,10 @@ func (a *App) Buy(ctx context.Context, itemID string, quantity int) (services.Tr
 	if err != nil {
 		return services.TradeResult{}, err
 	}
+	storyUpdate := a.storyCommands().SyncAfterTrade(a.activeRun, itemID, quantity, true)
+	if summary := storyUpdate.Summary(); summary != "" {
+		result.Message = result.Message + "\n" + summary
+	}
 
 	if err := a.autosaveWithPreferredRoute(ctx, RouteTrade); err != nil {
 		return services.TradeResult{}, err
@@ -95,6 +101,10 @@ func (a *App) Sell(ctx context.Context, itemID string, quantity int) (services.T
 	result, err := a.runCommands().Sell(a.activeRun, itemID, quantity)
 	if err != nil {
 		return services.TradeResult{}, err
+	}
+	storyUpdate := a.storyCommands().SyncAfterTrade(a.activeRun, itemID, quantity, false)
+	if summary := storyUpdate.Summary(); summary != "" {
+		result.Message = result.Message + "\n" + summary
 	}
 
 	if err := a.autosaveWithPreferredRoute(ctx, RouteTrade); err != nil {
@@ -126,6 +136,10 @@ func (a *App) ResolveTravel(ctx context.Context) (domain.TravelResolution, error
 	resolution, err := a.travelCommands().ResolvePendingTravel(a.activeRun)
 	if err != nil {
 		return domain.TravelResolution{}, err
+	}
+	storyUpdate := a.storyCommands().SyncAfterTravel(a.activeRun)
+	if summary := storyUpdate.Summary(); summary != "" {
+		resolution.Message = resolution.Message + "\n" + summary
 	}
 
 	if err := a.autosaveWithPreferredRoute(ctx, RoutePortOverview); err != nil {
@@ -161,6 +175,31 @@ func (a *App) ClearActiveRun() {
 	a.route = RouteMainMenu
 }
 
+func (a *App) AvailableMissions() ([]domain.MissionDefinition, error) {
+	if err := a.requireActiveRun(); err != nil {
+		return nil, err
+	}
+
+	return a.storyCommands().AvailableMissions(*a.activeRun), nil
+}
+
+func (a *App) AcceptMission(ctx context.Context, missionID string) (StoryUpdate, error) {
+	if err := a.requireActiveRun(); err != nil {
+		return StoryUpdate{}, err
+	}
+
+	update, err := a.storyCommands().AcceptMission(a.activeRun, missionID)
+	if err != nil {
+		return StoryUpdate{}, err
+	}
+
+	if err := a.autosaveWithPreferredRoute(ctx, RoutePortOverview); err != nil {
+		return StoryUpdate{}, err
+	}
+
+	return update, nil
+}
+
 func (a *App) runCommands() RunCommands {
 	commands := NewRunCommands(a.snapshot, a.saveRepository, a.runtime)
 	commands.Economy = services.EconomyService{}
@@ -194,6 +233,14 @@ func (a *App) recoveryCommands() RecoveryCommands {
 	commands.Economy = services.EconomyService{}
 	commands.Travel = services.TravelService{}
 	commands.RunEval = services.RunEvaluator{}
+	return commands
+}
+
+func (a *App) storyCommands() StoryCommands {
+	commands := NewStoryCommands(a.snapshot)
+	commands.Factions = services.FactionService{}
+	commands.Missions = services.MissionService{}
+	commands.Stories = services.StoryService{}
 	return commands
 }
 

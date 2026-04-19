@@ -20,6 +20,7 @@ type PortOverviewViewModel struct {
 	IsGameOver            bool
 	RecentEventText       string
 	AvailableGoods        []string
+	StoryNotices          []string
 	StatusMessage         string
 }
 
@@ -28,6 +29,7 @@ type PortOverviewPresenter struct {
 	Economy services.EconomyService
 	Travel  services.TravelService
 	RunEval services.RunEvaluator
+	Story   StoryPresenter
 }
 
 func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride string) (PortOverviewViewModel, error) {
@@ -44,6 +46,7 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 
 	isGameOver := p.RunEval.IsGameOver(run, p.Data, p.Economy, p.Travel)
 	cheapestTravelCost := p.Travel.GetCheapestTravelCostFromPort(port, p.Data.Ports)
+	storyViewModel := p.Story.Present(run)
 	statusMessage := statusOverride
 	if statusMessage == "" {
 		if isGameOver {
@@ -54,6 +57,9 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 
 		if run.RecentEvent != nil && run.RecentEvent.ResolvedDescription != "" {
 			statusMessage += "\nRecent event outcome: " + run.RecentEvent.ResolvedDescription
+		}
+		if len(storyViewModel.MissionNotices) > 0 {
+			statusMessage += "\n" + storyViewModel.MissionNotices[0]
 		}
 	}
 
@@ -70,6 +76,7 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 		IsGameOver:            isGameOver,
 		RecentEventText:       recentEventDescription(run.RecentEvent),
 		AvailableGoods:        availableGoods,
+		StoryNotices:          append(append([]string{}, storyViewModel.FactionNotices...), append(storyViewModel.MissionNotices, storyViewModel.StoryNotices...)...),
 		StatusMessage:         statusMessage,
 	}, nil
 }

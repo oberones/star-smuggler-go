@@ -67,12 +67,15 @@ func TestJSONRepositoryRejectsInvalidContent(t *testing.T) {
 	t.Parallel()
 
 	reader := mapReader{
-		"ports.json":  []byte(`[{"id":"mars","name":"Mars","description":"Port","zone":"Inner","backgroundTexturePath":"res://bg","previewTexturePath":"res://preview","tradeBackgroundPath":"res://trade","musicTrackId":"music"}]`),
-		"items.json":  []byte(`[{"id":"bad_item","name":"Bad Item","description":"Oops","rarity":"Legendary","basePrice":10}]`),
-		"events.json": []byte(`[{"id":"event","name":"Event","descriptionTemplate":"Hello","effectType":"CreditsLossScaled","weight":1,"parameters":{}}]`),
+		"ports.json":    []byte(`[{"id":"mars","name":"Mars","description":"Port","zone":"Inner","backgroundTexturePath":"res://bg","previewTexturePath":"res://preview","tradeBackgroundPath":"res://trade","musicTrackId":"music"}]`),
+		"items.json":    []byte(`[{"id":"bad_item","name":"Bad Item","description":"Oops","rarity":"Legendary","basePrice":10}]`),
+		"events.json":   []byte(`[{"id":"event","name":"Event","descriptionTemplate":"Hello","effectType":"CreditsLossScaled","weight":1,"parameters":{}}]`),
+		"factions.json": []byte(`[]`),
+		"missions.json": []byte(`[]`),
+		"story.json":    []byte(`[]`),
 	}
 
-	repository := content.NewJSONRepository(reader, "ports.json", "items.json", "events.json")
+	repository := content.NewJSONRepository(reader, "ports.json", "items.json", "events.json", "factions.json", "missions.json", "story.json")
 	_, err := repository.LoadSnapshot(context.Background())
 	if err == nil {
 		t.Fatal("expected invalid content error")

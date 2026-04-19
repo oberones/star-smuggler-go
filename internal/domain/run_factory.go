@@ -32,6 +32,8 @@ func CreateNewRun(data DataSnapshot, marketSnapshots map[string]MarketSnapshot, 
 	run := NewRunState()
 	run.Player.CurrentPortID = startingPort.ID
 	run.MarketsByPortID = cloneMarkets(marketSnapshots)
+	run.FactionStandings = DefaultFactionStandings(data)
+	run.Story = NewStoryState()
 	return run, nil
 }
 

@@ -23,12 +23,14 @@ type TradeScreenViewModel struct {
 	CargoLoad             int
 	CargoLimit            int
 	Items                 []TradeItemViewModel
+	StoryNotices          []string
 	StatusMessage         string
 }
 
 type TradePresenter struct {
 	Data    domain.DataSnapshot
 	Economy services.EconomyService
+	Story   StoryPresenter
 }
 
 func (p TradePresenter) Present(run domain.RunState, statusOverride string) (TradeScreenViewModel, error) {
@@ -67,6 +69,10 @@ func (p TradePresenter) Present(run domain.RunState, statusOverride string) (Tra
 	if statusMessage == "" {
 		statusMessage = "Select a good, choose a quantity, and trade."
 	}
+	storyViewModel := p.Story.Present(run)
+	if statusOverride == "" && len(storyViewModel.MissionNotices) > 0 {
+		statusMessage += "\n" + storyViewModel.MissionNotices[0]
+	}
 
 	return TradeScreenViewModel{
 		PortName:              port.Name,
@@ -76,6 +82,7 @@ func (p TradePresenter) Present(run domain.RunState, statusOverride string) (Tra
 		CargoLoad:             p.Economy.GetCargoLoad(run),
 		CargoLimit:            run.Player.CargoLimit,
 		Items:                 items,
+		StoryNotices:          append(append([]string{}, storyViewModel.FactionNotices...), append(storyViewModel.MissionNotices, storyViewModel.StoryNotices...)...),
 		StatusMessage:         statusMessage,
 	}, nil
 }

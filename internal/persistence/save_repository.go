@@ -145,6 +145,42 @@ func dehydrateRunState(run domain.RunState) SaveData {
 		})
 	}
 
+	factionIDs := make([]string, 0, len(run.FactionStandings))
+	for factionID := range run.FactionStandings {
+		factionIDs = append(factionIDs, factionID)
+	}
+	sort.Strings(factionIDs)
+
+	factionStandings := make([]FactionStandingSaveData, 0, len(run.FactionStandings))
+	for _, factionID := range factionIDs {
+		standing := run.FactionStandings[factionID]
+		factionStandings = append(factionStandings, FactionStandingSaveData{
+			FactionID:        standing.FactionID,
+			Score:            standing.Score,
+			StandingTier:     standing.StandingTier,
+			LastChangeReason: standing.LastChangeReason,
+		})
+	}
+
+	missionIDs := make([]string, 0, len(run.ActiveMissions))
+	for missionID := range run.ActiveMissions {
+		missionIDs = append(missionIDs, missionID)
+	}
+	sort.Strings(missionIDs)
+
+	activeMissions := make([]MissionStateSaveData, 0, len(run.ActiveMissions))
+	for _, missionID := range missionIDs {
+		mission := run.ActiveMissions[missionID]
+		activeMissions = append(activeMissions, MissionStateSaveData{
+			MissionDefinitionID: mission.MissionDefinitionID,
+			Status:              string(mission.Status),
+			AcceptedAtJump:      mission.AcceptedAtJump,
+			DeadlineJump:        mission.DeadlineJump,
+			ProgressFlags:       cloneBoolMap(mission.ProgressFlags),
+			RewardClaimed:       mission.RewardClaimed,
+		})
+	}
+
 	return SaveData{
 		Version: CurrentSaveVersion,
 		Player: PlayerSaveData{
@@ -156,10 +192,19 @@ func dehydrateRunState(run domain.RunState) SaveData {
 		Markets:                   markets,
 		RoutePressureByKey:        cloneIntMap(run.RoutePressureByKey),
 		CommodityPressureByItemID: cloneIntMap(run.CommodityPressureByItemID),
-		EmergencyRecoveryUsed:     run.EmergencyRecoveryUsed,
-		JumpsSinceLastUpdate:      run.JumpsSinceLastUpdate,
-		TotalJumps:                run.TotalJumps,
-		RecentEvent:               dehydrateEvent(run.RecentEvent),
+		FactionStandings:          factionStandings,
+		ActiveMissions:            activeMissions,
+		CompletedMissionIDs:       append([]string(nil), run.CompletedMissionIDs...),
+		Story: StoryStateSaveData{
+			ActiveStoryArcIDs:    append([]string(nil), run.Story.ActiveStoryArcIDs...),
+			CompletedStoryArcIDs: append([]string(nil), run.Story.CompletedStoryArcIDs...),
+			StoryFlags:           cloneBoolMap(run.Story.StoryFlags),
+			NamedCharacterStates: cloneStringMap(run.Story.NamedCharacterStates),
+		},
+		EmergencyRecoveryUsed: run.EmergencyRecoveryUsed,
+		JumpsSinceLastUpdate:  run.JumpsSinceLastUpdate,
+		TotalJumps:            run.TotalJumps,
+		RecentEvent:           dehydrateEvent(run.RecentEvent),
 	}
 }
 
@@ -172,6 +217,15 @@ func hydrateRunState(save SaveData) domain.RunState {
 	run.MarketsByPortID = make(map[string]domain.MarketSnapshot, len(save.Markets))
 	run.RoutePressureByKey = cloneIntMap(save.RoutePressureByKey)
 	run.CommodityPressureByItemID = cloneIntMap(save.CommodityPressureByItemID)
+	run.FactionStandings = make(map[string]domain.FactionStanding, len(save.FactionStandings))
+	run.ActiveMissions = make(map[string]domain.MissionState, len(save.ActiveMissions))
+	run.CompletedMissionIDs = append([]string(nil), save.CompletedMissionIDs...)
+	run.Story = domain.StoryState{
+		ActiveStoryArcIDs:    append([]string(nil), save.Story.ActiveStoryArcIDs...),
+		CompletedStoryArcIDs: append([]string(nil), save.Story.CompletedStoryArcIDs...),
+		StoryFlags:           cloneBoolMap(save.Story.StoryFlags),
+		NamedCharacterStates: cloneStringMap(save.Story.NamedCharacterStates),
+	}
 	run.EmergencyRecoveryUsed = save.EmergencyRecoveryUsed
 	run.JumpsSinceLastUpdate = save.JumpsSinceLastUpdate
 	run.TotalJumps = save.TotalJumps
@@ -182,6 +236,26 @@ func hydrateRunState(save SaveData) domain.RunState {
 			PortID:           market.PortID,
 			AvailableItemIDs: append([]string(nil), market.AvailableItemIDs...),
 			PricesByItemID:   cloneIntMap(market.PricesByItemID),
+		}
+	}
+
+	for _, standing := range save.FactionStandings {
+		run.FactionStandings[standing.FactionID] = domain.FactionStanding{
+			FactionID:        standing.FactionID,
+			Score:            standing.Score,
+			StandingTier:     standing.StandingTier,
+			LastChangeReason: standing.LastChangeReason,
+		}
+	}
+
+	for _, mission := range save.ActiveMissions {
+		run.ActiveMissions[mission.MissionDefinitionID] = domain.MissionState{
+			MissionDefinitionID: mission.MissionDefinitionID,
+			Status:              domain.MissionStatus(mission.Status),
+			AcceptedAtJump:      mission.AcceptedAtJump,
+			DeadlineJump:        mission.DeadlineJump,
+			ProgressFlags:       cloneBoolMap(mission.ProgressFlags),
+			RewardClaimed:       mission.RewardClaimed,
 		}
 	}
 
@@ -232,6 +306,30 @@ func cloneFloatMap(source map[string]float64) map[string]float64 {
 	}
 
 	clone := make(map[string]float64, len(source))
+	for key, value := range source {
+		clone[key] = value
+	}
+	return clone
+}
+
+func cloneBoolMap(source map[string]bool) map[string]bool {
+	if source == nil {
+		return map[string]bool{}
+	}
+
+	clone := make(map[string]bool, len(source))
+	for key, value := range source {
+		clone[key] = value
+	}
+	return clone
+}
+
+func cloneStringMap(source map[string]string) map[string]string {
+	if source == nil {
+		return map[string]string{}
+	}
+
+	clone := make(map[string]string, len(source))
 	for key, value := range source {
 		clone[key] = value
 	}

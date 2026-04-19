@@ -1,0 +1,34 @@
+[
+  {
+    "id": "guild_intro_arc",
+    "name": "Whispers In The Cargo Bay",
+    "entryFactionId": "freeguild",
+    "minimumStanding": "Trusted",
+    "entryFlags": {},
+    "beats": [
+      {
+        "id": "guild_intro_offer",
+        "text": "A Free Guild broker finally trusts you enough to mention a bigger network moving beneath the customs lanes.",
+        "requiredFlags": {},
+        "setFlags": {
+          "guild_intro_offer_seen": true
+        }
+      },
+      {
+        "id": "guild_intro_commitment",
+        "text": "You agree to keep flying jobs for the Guild, even if it means drawing customs attention.",
+        "requiredFlags": {
+          "guild_intro_offer_seen": true
+        },
+        "setFlags": {
+          "guild_intro_commitment_made": true
+        }
+      }
+    ],
+    "completionEffects": {
+      "setFlags": {
+        "guild_intro_arc_complete": true
+      }
+    }
+  }
+]

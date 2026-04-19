@@ -1,0 +1,28 @@
+[
+  {
+    "id": "freeguild",
+    "name": "Free Guild",
+    "description": "Independent merchants, brokers, and smugglers who prize profitable discretion over ideology.",
+    "alignment": "Neutral",
+    "homePortIds": ["mars", "ceres"],
+    "rivalFactionIds": ["customs"],
+    "standingThresholds": [
+      { "tier": "Hostile", "minimumScore": -25 },
+      { "tier": "Neutral", "minimumScore": 0 },
+      { "tier": "Trusted", "minimumScore": 20 }
+    ]
+  },
+  {
+    "id": "customs",
+    "name": "Helios Customs",
+    "description": "Port authorities and inspectors responsible for keeping the inner worlds profitable and compliant.",
+    "alignment": "Lawful",
+    "homePortIds": ["mars", "europa"],
+    "rivalFactionIds": ["freeguild"],
+    "standingThresholds": [
+      { "tier": "Wanted", "minimumScore": -20 },
+      { "tier": "Observed", "minimumScore": 0 },
+      { "tier": "Favored", "minimumScore": 15 }
+    ]
+  }
+]

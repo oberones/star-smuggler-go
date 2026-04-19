@@ -34,6 +34,32 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 	}
 	run.RoutePressureByKey["mars->venus"] = 2
 	run.CommodityPressureByItemID["synthspice"] = 3
+	run.FactionStandings["freeguild"] = domain.FactionStanding{
+		FactionID:        "freeguild",
+		Score:            12,
+		StandingTier:     "Neutral",
+		LastChangeReason: "Trusted courier",
+	}
+	run.ActiveMissions["guild_supply_run"] = domain.MissionState{
+		MissionDefinitionID: "guild_supply_run",
+		Status:              domain.MissionStatusInProgress,
+		AcceptedAtJump:      2,
+		DeadlineJump:        6,
+		ProgressFlags: map[string]bool{
+			"loaded": true,
+		},
+	}
+	run.CompletedMissionIDs = []string{"starter_job"}
+	run.Story = domain.StoryState{
+		ActiveStoryArcIDs:    []string{"guild_intro_arc"},
+		CompletedStoryArcIDs: []string{"tutorial_arc"},
+		StoryFlags: map[string]bool{
+			"guild_intro_offer_seen": true,
+		},
+		NamedCharacterStates: map[string]string{
+			"lia": "watching",
+		},
+	}
 	run.EmergencyRecoveryUsed = true
 	run.JumpsSinceLastUpdate = 2
 	run.TotalJumps = 7
@@ -77,6 +103,18 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 	}
 	if !reflect.DeepEqual(loaded.CommodityPressureByItemID, run.CommodityPressureByItemID) {
 		t.Fatalf("commodity pressure mismatch: %#v != %#v", loaded.CommodityPressureByItemID, run.CommodityPressureByItemID)
+	}
+	if !reflect.DeepEqual(loaded.FactionStandings, run.FactionStandings) {
+		t.Fatalf("faction standings mismatch: %#v != %#v", loaded.FactionStandings, run.FactionStandings)
+	}
+	if !reflect.DeepEqual(loaded.ActiveMissions, run.ActiveMissions) {
+		t.Fatalf("active missions mismatch: %#v != %#v", loaded.ActiveMissions, run.ActiveMissions)
+	}
+	if !reflect.DeepEqual(loaded.CompletedMissionIDs, run.CompletedMissionIDs) {
+		t.Fatalf("completed mission ids mismatch: %#v != %#v", loaded.CompletedMissionIDs, run.CompletedMissionIDs)
+	}
+	if !reflect.DeepEqual(loaded.Story, run.Story) {
+		t.Fatalf("story mismatch: %#v != %#v", loaded.Story, run.Story)
 	}
 	if loaded.EmergencyRecoveryUsed != run.EmergencyRecoveryUsed {
 		t.Fatalf("recovery flag mismatch: %t != %t", loaded.EmergencyRecoveryUsed, run.EmergencyRecoveryUsed)

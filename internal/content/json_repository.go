@@ -10,22 +10,28 @@ import (
 )
 
 type JSONRepository struct {
-	reader     FileReader
-	portsPath  string
-	itemsPath  string
-	eventsPath string
+	reader       FileReader
+	portsPath    string
+	itemsPath    string
+	eventsPath   string
+	factionsPath string
+	missionsPath string
+	storyPath    string
 }
 
-func NewJSONRepository(reader FileReader, portsPath string, itemsPath string, eventsPath string) *JSONRepository {
+func NewJSONRepository(reader FileReader, portsPath string, itemsPath string, eventsPath string, factionsPath string, missionsPath string, storyPath string) *JSONRepository {
 	if reader == nil {
 		reader = OSFileReader{}
 	}
 
 	return &JSONRepository{
-		reader:     reader,
-		portsPath:  portsPath,
-		itemsPath:  itemsPath,
-		eventsPath: eventsPath,
+		reader:       reader,
+		portsPath:    portsPath,
+		itemsPath:    itemsPath,
+		eventsPath:   eventsPath,
+		factionsPath: factionsPath,
+		missionsPath: missionsPath,
+		storyPath:    storyPath,
 	}
 }
 
@@ -35,6 +41,9 @@ func NewDefaultJSONRepository(baseDir string) *JSONRepository {
 		ResolvePath(baseDir, DefaultPortsPath),
 		ResolvePath(baseDir, DefaultItemsPath),
 		ResolvePath(baseDir, DefaultEventsPath),
+		ResolvePath(baseDir, DefaultFactionsPath),
+		ResolvePath(baseDir, DefaultMissionsPath),
+		ResolvePath(baseDir, DefaultStoryPath),
 	)
 }
 
@@ -58,7 +67,22 @@ func (r *JSONRepository) LoadSnapshot(ctx context.Context) (domain.DataSnapshot,
 		return domain.DataSnapshot{}, fmt.Errorf("load events: %w", err)
 	}
 
-	snapshot := domain.NewDataSnapshot(ports, items, events)
+	factions, err := loadList[domain.FactionDefinition](r.reader, r.factionsPath)
+	if err != nil {
+		return domain.DataSnapshot{}, fmt.Errorf("load factions: %w", err)
+	}
+
+	missions, err := loadList[domain.MissionDefinition](r.reader, r.missionsPath)
+	if err != nil {
+		return domain.DataSnapshot{}, fmt.Errorf("load missions: %w", err)
+	}
+
+	storyArcs, err := loadList[domain.StoryArcDefinition](r.reader, r.storyPath)
+	if err != nil {
+		return domain.DataSnapshot{}, fmt.Errorf("load story arcs: %w", err)
+	}
+
+	snapshot := domain.NewDataSnapshot(ports, items, events, factions, missions, storyArcs)
 	if err := validateSnapshot(snapshot); err != nil {
 		return domain.DataSnapshot{}, err
 	}
@@ -137,6 +161,103 @@ func validateSnapshot(snapshot domain.DataSnapshot) error {
 
 	if len(snapshot.Ports) == 0 || len(snapshot.Items) == 0 || len(snapshot.Events) == 0 {
 		return errors.New("snapshot must include ports, items, and events")
+	}
+
+	factionIDs := make(map[string]struct{}, len(snapshot.Factions))
+	for _, faction := range snapshot.Factions {
+		if faction.ID == "" || faction.Name == "" || faction.Description == "" {
+			return fmt.Errorf("faction has empty required fields: %+v", faction)
+		}
+		if !faction.Alignment.IsValid() {
+			return fmt.Errorf("faction %q uses invalid alignment %q", faction.ID, faction.Alignment)
+		}
+		if len(faction.StandingThresholds) == 0 {
+			return fmt.Errorf("faction %q must define standing thresholds", faction.ID)
+		}
+		if _, exists := factionIDs[faction.ID]; exists {
+			return fmt.Errorf("duplicate faction id %q", faction.ID)
+		}
+		lastMinimum := -1 << 30
+		for _, threshold := range faction.StandingThresholds {
+			if threshold.Tier == "" {
+				return fmt.Errorf("faction %q has threshold with empty tier", faction.ID)
+			}
+			if threshold.MinimumScore < lastMinimum {
+				return fmt.Errorf("faction %q thresholds must be sorted by minimum score", faction.ID)
+			}
+			lastMinimum = threshold.MinimumScore
+		}
+		for _, homePortID := range faction.HomePortIDs {
+			if _, exists := snapshot.PortsByID[homePortID]; !exists {
+				return fmt.Errorf("faction %q references unknown home port %q", faction.ID, homePortID)
+			}
+		}
+		factionIDs[faction.ID] = struct{}{}
+	}
+
+	missionIDs := make(map[string]struct{}, len(snapshot.Missions))
+	for _, mission := range snapshot.Missions {
+		if mission.ID == "" || mission.Name == "" || mission.Briefing == "" {
+			return fmt.Errorf("mission has empty required fields: %+v", mission)
+		}
+		if !mission.MissionType.IsValid() {
+			return fmt.Errorf("mission %q uses invalid mission type %q", mission.ID, mission.MissionType)
+		}
+		if _, exists := snapshot.PortsByID[mission.OriginPortID]; !exists {
+			return fmt.Errorf("mission %q references unknown origin port %q", mission.ID, mission.OriginPortID)
+		}
+		if _, exists := snapshot.PortsByID[mission.DestinationPortID]; !exists {
+			return fmt.Errorf("mission %q references unknown destination port %q", mission.ID, mission.DestinationPortID)
+		}
+		if mission.RequiredCommodityID != "" {
+			if _, exists := snapshot.ItemsByID[mission.RequiredCommodityID]; !exists {
+				return fmt.Errorf("mission %q references unknown commodity %q", mission.ID, mission.RequiredCommodityID)
+			}
+			if mission.RequiredQuantity <= 0 {
+				return fmt.Errorf("mission %q must require a positive quantity", mission.ID)
+			}
+		}
+		if mission.Reward.Credits <= 0 {
+			return fmt.Errorf("mission %q must grant positive reward credits", mission.ID)
+		}
+		if mission.UnlockConditions.FactionID != "" {
+			if _, exists := factionIDs[mission.UnlockConditions.FactionID]; !exists {
+				return fmt.Errorf("mission %q references unknown unlock faction %q", mission.ID, mission.UnlockConditions.FactionID)
+			}
+		}
+		if mission.FailureConsequences.FactionID != "" {
+			if _, exists := factionIDs[mission.FailureConsequences.FactionID]; !exists {
+				return fmt.Errorf("mission %q references unknown failure faction %q", mission.ID, mission.FailureConsequences.FactionID)
+			}
+		}
+		if _, exists := missionIDs[mission.ID]; exists {
+			return fmt.Errorf("duplicate mission id %q", mission.ID)
+		}
+		missionIDs[mission.ID] = struct{}{}
+	}
+
+	storyArcIDs := make(map[string]struct{}, len(snapshot.StoryArcs))
+	for _, storyArc := range snapshot.StoryArcs {
+		if storyArc.ID == "" || storyArc.Name == "" {
+			return fmt.Errorf("story arc has empty required fields: %+v", storyArc)
+		}
+		if storyArc.EntryFactionID != "" {
+			if _, exists := factionIDs[storyArc.EntryFactionID]; !exists {
+				return fmt.Errorf("story arc %q references unknown entry faction %q", storyArc.ID, storyArc.EntryFactionID)
+			}
+		}
+		if len(storyArc.Beats) == 0 {
+			return fmt.Errorf("story arc %q must define at least one beat", storyArc.ID)
+		}
+		for _, beat := range storyArc.Beats {
+			if beat.ID == "" || beat.Text == "" {
+				return fmt.Errorf("story arc %q has beat with empty required fields", storyArc.ID)
+			}
+		}
+		if _, exists := storyArcIDs[storyArc.ID]; exists {
+			return fmt.Errorf("duplicate story arc id %q", storyArc.ID)
+		}
+		storyArcIDs[storyArc.ID] = struct{}{}
 	}
 
 	return nil
