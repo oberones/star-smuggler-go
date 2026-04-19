@@ -18,6 +18,7 @@ type StoryCommands struct {
 	Factions services.FactionService
 	Missions services.MissionService
 	Stories  services.StoryService
+	Upgrades services.UpgradeService
 }
 
 func NewStoryCommands(data domain.DataSnapshot) StoryCommands {
@@ -106,7 +107,7 @@ func (c StoryCommands) SyncAfterTravel(run *domain.RunState) StoryUpdate {
 
 	notices := make([]string, 0)
 
-	completed, failed := c.Missions.ResolveTravelArrival(run, c.Data, c.Factions)
+	completed, failed := c.Missions.ResolveTravelArrival(run, c.Data, c.Factions, c.Upgrades)
 	for _, missionState := range completed {
 		if definition, ok := c.Data.MissionsByID[missionState.MissionDefinitionID]; ok {
 			notices = append(notices, fmt.Sprintf("Mission completed: %s", definition.Name))

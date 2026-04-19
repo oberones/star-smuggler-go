@@ -155,16 +155,16 @@
 
 ### Tests for User Story 4
 
-- [ ] T059 [P] [US4] Add ship upgrade rule tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/upgrade_service_test.go`
-- [ ] T060 [P] [US4] Add specialization effect tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/specialization_test.go`
+- [X] T059 [P] [US4] Add ship upgrade rule tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/upgrade_service_test.go`
+- [X] T060 [P] [US4] Add specialization effect tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/specialization_test.go`
 
 ### Implementation for User Story 4
 
-- [ ] T061 [P] [US4] Add upgrade definitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/upgrades/ship_upgrades.json`
-- [ ] T062 [P] [US4] Implement ship upgrade and specialization state in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/ship_progression.go`
-- [ ] T063 [P] [US4] Implement upgrade purchase and application rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/upgrade_service.go`
-- [ ] T064 [US4] Integrate upgrade availability and purchase flow into the application layer in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/progression_commands.go`
-- [ ] T065 [US4] Present ship progression state in the existing port overview and trade flow in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/progression_presenter.go`
+- [X] T061 [P] [US4] Add upgrade definitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/upgrades/ship_upgrades.json`
+- [X] T062 [P] [US4] Implement ship upgrade and specialization state in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/ship_progression.go`
+- [X] T063 [P] [US4] Implement upgrade purchase and application rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/upgrade_service.go`
+- [X] T064 [US4] Integrate upgrade availability and purchase flow into the application layer in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/progression_commands.go`
+- [X] T065 [US4] Present ship progression state in the existing port overview and trade flow in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/progression_presenter.go`
 
 **Checkpoint**: All user stories should now be independently functional and cumulatively form the full target experience.
 

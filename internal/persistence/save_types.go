@@ -9,6 +9,7 @@ type SaveData struct {
 	Markets                   []MarketSnapshotSaveData  `json:"markets"`
 	RoutePressureByKey        map[string]int            `json:"routePressureByKey,omitempty"`
 	CommodityPressureByItemID map[string]int            `json:"commodityPressureByItemId,omitempty"`
+	Progression               ShipProgressionSaveData   `json:"progression"`
 	FactionStandings          []FactionStandingSaveData `json:"factionStandings,omitempty"`
 	ActiveMissions            []MissionStateSaveData    `json:"activeMissions,omitempty"`
 	CompletedMissionIDs       []string                  `json:"completedMissionIds,omitempty"`
@@ -43,6 +44,11 @@ type FactionStandingSaveData struct {
 	Score            int    `json:"score"`
 	StandingTier     string `json:"standingTier"`
 	LastChangeReason string `json:"lastChangeReason"`
+}
+
+type ShipProgressionSaveData struct {
+	PurchasedUpgradeIDs []string        `json:"purchasedUpgradeIds"`
+	SpecializationFlags map[string]bool `json:"specializationFlags"`
 }
 
 type MissionStateSaveData struct {

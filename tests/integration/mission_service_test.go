@@ -21,6 +21,7 @@ func TestMissionServiceAcceptsAndCompletesDeliveryMission(t *testing.T) {
 	mission := snapshot.MissionsByID["guild_supply_run"]
 	service := services.MissionService{}
 	factions := services.FactionService{}
+	upgrades := services.UpgradeService{}
 
 	accepted := service.AcceptMission(&run, mission)
 	if accepted.Status != domain.MissionStatusInProgress {
@@ -28,7 +29,7 @@ func TestMissionServiceAcceptsAndCompletesDeliveryMission(t *testing.T) {
 	}
 
 	run.Player.CurrentPortID = mission.DestinationPortID
-	completed, failed := service.ResolveTravelArrival(&run, snapshot, factions)
+	completed, failed := service.ResolveTravelArrival(&run, snapshot, factions, upgrades)
 	if len(failed) != 0 {
 		t.Fatalf("expected no failed missions, got %#v", failed)
 	}

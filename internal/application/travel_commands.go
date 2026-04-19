@@ -9,13 +9,14 @@ import (
 )
 
 type TravelCommands struct {
-	Data    domain.DataSnapshot
-	Runtime services.RuntimeContext
-	Economy services.EconomyService
-	Balance services.EconomyBalanceService
-	Travel  services.TravelService
-	Events  services.EventService
-	RunEval services.RunEvaluator
+	Data     domain.DataSnapshot
+	Runtime  services.RuntimeContext
+	Economy  services.EconomyService
+	Balance  services.EconomyBalanceService
+	Travel   services.TravelService
+	Upgrades services.UpgradeService
+	Events   services.EventService
+	RunEval  services.RunEvaluator
 }
 
 func NewTravelCommands(data domain.DataSnapshot, runtime services.RuntimeContext) TravelCommands {
@@ -36,7 +37,8 @@ func (c TravelCommands) BeginTravel(run *domain.RunState, destinationPortID stri
 		return nil, fmt.Errorf("destination port %q was not found", destinationPortID)
 	}
 
-	cost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(*run, origin.ID, destination.ID)
+	baseCost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(*run, origin.ID, destination.ID)
+	cost := c.Upgrades.AdjustTravelCost(*run, baseCost, c.Data)
 	if run.Player.Credits < cost {
 		return nil, fmt.Errorf("you need %d credits to reach %s", cost, destination.Name)
 	}

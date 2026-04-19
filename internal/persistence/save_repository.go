@@ -192,9 +192,13 @@ func dehydrateRunState(run domain.RunState) SaveData {
 		Markets:                   markets,
 		RoutePressureByKey:        cloneIntMap(run.RoutePressureByKey),
 		CommodityPressureByItemID: cloneIntMap(run.CommodityPressureByItemID),
-		FactionStandings:          factionStandings,
-		ActiveMissions:            activeMissions,
-		CompletedMissionIDs:       append([]string(nil), run.CompletedMissionIDs...),
+		Progression: ShipProgressionSaveData{
+			PurchasedUpgradeIDs: append([]string(nil), run.Progression.PurchasedUpgradeIDs...),
+			SpecializationFlags: cloneBoolMap(run.Progression.SpecializationFlags),
+		},
+		FactionStandings:    factionStandings,
+		ActiveMissions:      activeMissions,
+		CompletedMissionIDs: append([]string(nil), run.CompletedMissionIDs...),
 		Story: StoryStateSaveData{
 			ActiveStoryArcIDs:    append([]string(nil), run.Story.ActiveStoryArcIDs...),
 			CompletedStoryArcIDs: append([]string(nil), run.Story.CompletedStoryArcIDs...),
@@ -217,6 +221,10 @@ func hydrateRunState(save SaveData) domain.RunState {
 	run.MarketsByPortID = make(map[string]domain.MarketSnapshot, len(save.Markets))
 	run.RoutePressureByKey = cloneIntMap(save.RoutePressureByKey)
 	run.CommodityPressureByItemID = cloneIntMap(save.CommodityPressureByItemID)
+	run.Progression = domain.ShipProgressionState{
+		PurchasedUpgradeIDs: append([]string(nil), save.Progression.PurchasedUpgradeIDs...),
+		SpecializationFlags: cloneBoolMap(save.Progression.SpecializationFlags),
+	}
 	run.FactionStandings = make(map[string]domain.FactionStanding, len(save.FactionStandings))
 	run.ActiveMissions = make(map[string]domain.MissionState, len(save.ActiveMissions))
 	run.CompletedMissionIDs = append([]string(nil), save.CompletedMissionIDs...)

@@ -108,6 +108,7 @@ type RunState struct {
 	MarketsByPortID           map[string]MarketSnapshot
 	RoutePressureByKey        map[string]int
 	CommodityPressureByItemID map[string]int
+	Progression               ShipProgressionState
 	FactionStandings          map[string]FactionStanding
 	ActiveMissions            map[string]MissionState
 	CompletedMissionIDs       []string
@@ -129,6 +130,7 @@ func NewRunState() RunState {
 		MarketsByPortID:           make(map[string]MarketSnapshot),
 		RoutePressureByKey:        make(map[string]int),
 		CommodityPressureByItemID: make(map[string]int),
+		Progression:               NewShipProgressionState(),
 		FactionStandings:          make(map[string]FactionStanding),
 		ActiveMissions:            make(map[string]MissionState),
 		CompletedMissionIDs:       []string{},

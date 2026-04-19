@@ -52,20 +52,27 @@ func NewSceneBindings(
 		Factions: services.FactionService{},
 		Missions: services.MissionService{},
 	}
+	progressionPresenter := ProgressionPresenter{
+		Data:     data,
+		Factions: services.FactionService{},
+		Upgrades: services.UpgradeService{},
+	}
 
 	return SceneBindings{
 		MainMenu: MainMenuPresenter{},
 		PortOverview: PortOverviewPresenter{
-			Data:    data,
-			Economy: economy,
-			Travel:  travel,
-			RunEval: runEval,
-			Story:   storyPresenter,
+			Data:        data,
+			Economy:     economy,
+			Travel:      travel,
+			RunEval:     runEval,
+			Story:       storyPresenter,
+			Progression: progressionPresenter,
 		},
 		Trade: TradePresenter{
-			Data:    data,
-			Economy: economy,
-			Story:   storyPresenter,
+			Data:        data,
+			Economy:     economy,
+			Story:       storyPresenter,
+			Progression: progressionPresenter,
 		},
 		Travel: TravelPresenter{
 			Data:    data,

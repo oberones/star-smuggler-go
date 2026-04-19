@@ -1,0 +1,46 @@
+[
+  {
+    "id": "expanded_cargo_pods",
+    "name": "Expanded Cargo Pods",
+    "description": "External cargo pods that let the ship carry more goods without changing the core hull.",
+    "category": "Cargo",
+    "costCredits": 325,
+    "specialization": "Cargo",
+    "effects": [
+      {
+        "type": "CargoLimitBonus",
+        "value": 12
+      }
+    ]
+  },
+  {
+    "id": "slipstream_tuner",
+    "name": "Slipstream Tuner",
+    "description": "Navigation and engine tuning that trims transit cost across repeated routes.",
+    "category": "Speed",
+    "costCredits": 425,
+    "specialization": "Speed",
+    "effects": [
+      {
+        "type": "TravelCostDiscountPercent",
+        "value": 20
+      }
+    ]
+  },
+  {
+    "id": "guild_credential_spoof",
+    "name": "Guild Credential Spoof",
+    "description": "Broker-facing credentials that improve contract payout once the Free Guild trusts you.",
+    "category": "Influence",
+    "costCredits": 500,
+    "requiredFactionId": "freeguild",
+    "minimumStanding": "Trusted",
+    "specialization": "Influence",
+    "effects": [
+      {
+        "type": "MissionRewardBonusPercent",
+        "value": 25
+      }
+    ]
+  }
+]

@@ -17,9 +17,10 @@ type JSONRepository struct {
 	factionsPath string
 	missionsPath string
 	storyPath    string
+	upgradesPath string
 }
 
-func NewJSONRepository(reader FileReader, portsPath string, itemsPath string, eventsPath string, factionsPath string, missionsPath string, storyPath string) *JSONRepository {
+func NewJSONRepository(reader FileReader, portsPath string, itemsPath string, eventsPath string, factionsPath string, missionsPath string, storyPath string, upgradesPath string) *JSONRepository {
 	if reader == nil {
 		reader = OSFileReader{}
 	}
@@ -32,6 +33,7 @@ func NewJSONRepository(reader FileReader, portsPath string, itemsPath string, ev
 		factionsPath: factionsPath,
 		missionsPath: missionsPath,
 		storyPath:    storyPath,
+		upgradesPath: upgradesPath,
 	}
 }
 
@@ -44,6 +46,7 @@ func NewDefaultJSONRepository(baseDir string) *JSONRepository {
 		ResolvePath(baseDir, DefaultFactionsPath),
 		ResolvePath(baseDir, DefaultMissionsPath),
 		ResolvePath(baseDir, DefaultStoryPath),
+		ResolvePath(baseDir, DefaultUpgradesPath),
 	)
 }
 
@@ -82,7 +85,12 @@ func (r *JSONRepository) LoadSnapshot(ctx context.Context) (domain.DataSnapshot,
 		return domain.DataSnapshot{}, fmt.Errorf("load story arcs: %w", err)
 	}
 
-	snapshot := domain.NewDataSnapshot(ports, items, events, factions, missions, storyArcs)
+	upgrades, err := loadList[domain.ShipUpgradeDefinition](r.reader, r.upgradesPath)
+	if err != nil {
+		return domain.DataSnapshot{}, fmt.Errorf("load upgrades: %w", err)
+	}
+
+	snapshot := domain.NewDataSnapshot(ports, items, events, factions, missions, storyArcs, upgrades)
 	if err := validateSnapshot(snapshot); err != nil {
 		return domain.DataSnapshot{}, err
 	}
@@ -258,6 +266,45 @@ func validateSnapshot(snapshot domain.DataSnapshot) error {
 			return fmt.Errorf("duplicate story arc id %q", storyArc.ID)
 		}
 		storyArcIDs[storyArc.ID] = struct{}{}
+	}
+
+	upgradeIDs := make(map[string]struct{}, len(snapshot.Upgrades))
+	for _, upgrade := range snapshot.Upgrades {
+		if upgrade.ID == "" || upgrade.Name == "" || upgrade.Description == "" {
+			return fmt.Errorf("upgrade has empty required fields: %+v", upgrade)
+		}
+		if !upgrade.Category.IsValid() {
+			return fmt.Errorf("upgrade %q uses invalid category %q", upgrade.ID, upgrade.Category)
+		}
+		if upgrade.CostCredits <= 0 {
+			return fmt.Errorf("upgrade %q must have positive credit cost", upgrade.ID)
+		}
+		if upgrade.Specialization != "" && !upgrade.Specialization.IsValid() {
+			return fmt.Errorf("upgrade %q uses invalid specialization %q", upgrade.ID, upgrade.Specialization)
+		}
+		if upgrade.RequiredFactionID != "" {
+			if _, exists := factionIDs[upgrade.RequiredFactionID]; !exists {
+				return fmt.Errorf("upgrade %q references unknown required faction %q", upgrade.ID, upgrade.RequiredFactionID)
+			}
+			if upgrade.MinimumStanding == "" {
+				return fmt.Errorf("upgrade %q must define minimum standing when a faction requirement exists", upgrade.ID)
+			}
+		}
+		if len(upgrade.Effects) == 0 {
+			return fmt.Errorf("upgrade %q must define at least one effect", upgrade.ID)
+		}
+		for _, effect := range upgrade.Effects {
+			if !effect.Type.IsValid() {
+				return fmt.Errorf("upgrade %q uses invalid effect type %q", upgrade.ID, effect.Type)
+			}
+			if effect.Value <= 0 {
+				return fmt.Errorf("upgrade %q must define positive effect values", upgrade.ID)
+			}
+		}
+		if _, exists := upgradeIDs[upgrade.ID]; exists {
+			return fmt.Errorf("duplicate upgrade id %q", upgrade.ID)
+		}
+		upgradeIDs[upgrade.ID] = struct{}{}
 	}
 
 	return nil

@@ -73,9 +73,10 @@ func TestJSONRepositoryRejectsInvalidContent(t *testing.T) {
 		"factions.json": []byte(`[]`),
 		"missions.json": []byte(`[]`),
 		"story.json":    []byte(`[]`),
+		"upgrades.json": []byte(`[]`),
 	}
 
-	repository := content.NewJSONRepository(reader, "ports.json", "items.json", "events.json", "factions.json", "missions.json", "story.json")
+	repository := content.NewJSONRepository(reader, "ports.json", "items.json", "events.json", "factions.json", "missions.json", "story.json", "upgrades.json")
 	_, err := repository.LoadSnapshot(context.Background())
 	if err == nil {
 		t.Fatal("expected invalid content error")

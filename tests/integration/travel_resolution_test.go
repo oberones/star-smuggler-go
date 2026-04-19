@@ -33,6 +33,7 @@ func TestTravelCommandsResolveArrivalRefreshJumpCountAndEvent(t *testing.T) {
 		baseSnapshot.Factions,
 		baseSnapshot.Missions,
 		baseSnapshot.StoryArcs,
+		baseSnapshot.Upgrades,
 	)
 
 	runCommands := application.NewRunCommands(snapshot, nil, seededRuntime(17))

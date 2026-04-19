@@ -60,6 +60,12 @@ func cloneRunState(run domain.RunState) domain.RunState {
 	if clone.CommodityPressureByItemID == nil {
 		clone.CommodityPressureByItemID = map[string]int{}
 	}
+	if clone.Progression.SpecializationFlags == nil {
+		clone.Progression.SpecializationFlags = map[string]bool{}
+	}
+	if clone.Progression.PurchasedUpgradeIDs == nil {
+		clone.Progression.PurchasedUpgradeIDs = []string{}
+	}
 
 	return clone
 }

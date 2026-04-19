@@ -183,6 +183,14 @@ func (a *App) AvailableMissions() ([]domain.MissionDefinition, error) {
 	return a.storyCommands().AvailableMissions(*a.activeRun), nil
 }
 
+func (a *App) AvailableUpgrades() ([]domain.ShipUpgradeDefinition, error) {
+	if err := a.requireActiveRun(); err != nil {
+		return nil, err
+	}
+
+	return a.progressionCommands().AvailableUpgrades(*a.activeRun), nil
+}
+
 func (a *App) AcceptMission(ctx context.Context, missionID string) (StoryUpdate, error) {
 	if err := a.requireActiveRun(); err != nil {
 		return StoryUpdate{}, err
@@ -200,12 +208,28 @@ func (a *App) AcceptMission(ctx context.Context, missionID string) (StoryUpdate,
 	return update, nil
 }
 
+func (a *App) PurchaseUpgrade(ctx context.Context, upgradeID string) (services.UpgradePurchaseResult, error) {
+	if err := a.requireActiveRun(); err != nil {
+		return services.UpgradePurchaseResult{}, err
+	}
+
+	result := a.progressionCommands().PurchaseUpgrade(a.activeRun, upgradeID)
+	if result.Succeeded {
+		if err := a.autosaveWithPreferredRoute(ctx, RouteTrade); err != nil {
+			return services.UpgradePurchaseResult{}, err
+		}
+	}
+
+	return result, nil
+}
+
 func (a *App) runCommands() RunCommands {
 	commands := NewRunCommands(a.snapshot, a.saveRepository, a.runtime)
 	commands.Economy = services.EconomyService{}
 	commands.Balance = services.EconomyBalanceService{}
 	commands.Trade = services.TradeService{}
 	commands.Travel = services.TravelService{}
+	commands.Upgrades = services.UpgradeService{}
 	commands.RunEval = services.RunEvaluator{}
 	return commands
 }
@@ -215,6 +239,7 @@ func (a *App) travelCommands() TravelCommands {
 	commands.Economy = services.EconomyService{}
 	commands.Balance = services.EconomyBalanceService{}
 	commands.Travel = services.TravelService{}
+	commands.Upgrades = services.UpgradeService{}
 	commands.Events = services.EventService{}
 	commands.RunEval = services.RunEvaluator{}
 	return commands
@@ -241,6 +266,14 @@ func (a *App) storyCommands() StoryCommands {
 	commands.Factions = services.FactionService{}
 	commands.Missions = services.MissionService{}
 	commands.Stories = services.StoryService{}
+	commands.Upgrades = services.UpgradeService{}
+	return commands
+}
+
+func (a *App) progressionCommands() ProgressionCommands {
+	commands := NewProgressionCommands(a.snapshot)
+	commands.Factions = services.FactionService{}
+	commands.Upgrades = services.UpgradeService{}
 	return commands
 }
 

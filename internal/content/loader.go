@@ -15,6 +15,7 @@ const (
 	DefaultFactionsPath = "data/factions/sol_factions.json"
 	DefaultMissionsPath = "data/missions/intro_smuggling_jobs.json"
 	DefaultStoryPath    = "data/story/intro_arc.json"
+	DefaultUpgradesPath = "data/upgrades/ship_upgrades.json"
 )
 
 type Loader interface {

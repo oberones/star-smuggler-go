@@ -34,6 +34,12 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 	}
 	run.RoutePressureByKey["mars->venus"] = 2
 	run.CommodityPressureByItemID["synthspice"] = 3
+	run.Progression = domain.ShipProgressionState{
+		PurchasedUpgradeIDs: []string{"expanded_cargo_pods"},
+		SpecializationFlags: map[string]bool{
+			"Cargo": true,
+		},
+	}
 	run.FactionStandings["freeguild"] = domain.FactionStanding{
 		FactionID:        "freeguild",
 		Score:            12,
@@ -103,6 +109,9 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 	}
 	if !reflect.DeepEqual(loaded.CommodityPressureByItemID, run.CommodityPressureByItemID) {
 		t.Fatalf("commodity pressure mismatch: %#v != %#v", loaded.CommodityPressureByItemID, run.CommodityPressureByItemID)
+	}
+	if !reflect.DeepEqual(loaded.Progression, run.Progression) {
+		t.Fatalf("progression mismatch: %#v != %#v", loaded.Progression, run.Progression)
 	}
 	if !reflect.DeepEqual(loaded.FactionStandings, run.FactionStandings) {
 		t.Fatalf("faction standings mismatch: %#v != %#v", loaded.FactionStandings, run.FactionStandings)

@@ -31,7 +31,7 @@ func (s MissionService) AcceptMission(run *domain.RunState, definition domain.Mi
 	return state
 }
 
-func (s MissionService) ResolveTravelArrival(run *domain.RunState, snapshot domain.DataSnapshot, factions FactionService) ([]domain.MissionState, []domain.MissionState) {
+func (s MissionService) ResolveTravelArrival(run *domain.RunState, snapshot domain.DataSnapshot, factions FactionService, upgrades UpgradeService) ([]domain.MissionState, []domain.MissionState) {
 	completed := make([]domain.MissionState, 0)
 	failed := make([]domain.MissionState, 0)
 
@@ -61,7 +61,7 @@ func (s MissionService) ResolveTravelArrival(run *domain.RunState, snapshot doma
 		if definition.RequiredCommodityID != "" {
 			run.Cargo.SetQuantity(definition.RequiredCommodityID, run.Cargo.QuantityFor(definition.RequiredCommodityID)-definition.RequiredQuantity)
 		}
-		run.Player.Credits += definition.Reward.Credits
+		run.Player.Credits += upgrades.AdjustMissionReward(*run, definition.Reward.Credits, snapshot)
 		missionState.Status = domain.MissionStatusCompleted
 		missionState.RewardClaimed = true
 		completed = append(completed, missionState)

@@ -177,6 +177,74 @@ type StoryArcDefinition struct {
 	CompletionEffects StoryCompletionEffect `json:"completionEffects"`
 }
 
+type UpgradeCategory string
+
+const (
+	UpgradeCategoryCargo     UpgradeCategory = "Cargo"
+	UpgradeCategorySpeed     UpgradeCategory = "Speed"
+	UpgradeCategoryInfluence UpgradeCategory = "Influence"
+)
+
+func (c UpgradeCategory) IsValid() bool {
+	switch c {
+	case UpgradeCategoryCargo, UpgradeCategorySpeed, UpgradeCategoryInfluence:
+		return true
+	default:
+		return false
+	}
+}
+
+type ShipSpecialization string
+
+const (
+	ShipSpecializationCargo     ShipSpecialization = "Cargo"
+	ShipSpecializationSpeed     ShipSpecialization = "Speed"
+	ShipSpecializationInfluence ShipSpecialization = "Influence"
+)
+
+func (s ShipSpecialization) IsValid() bool {
+	switch s {
+	case ShipSpecializationCargo, ShipSpecializationSpeed, ShipSpecializationInfluence:
+		return true
+	default:
+		return false
+	}
+}
+
+type UpgradeEffectType string
+
+const (
+	UpgradeEffectCargoLimitBonus       UpgradeEffectType = "CargoLimitBonus"
+	UpgradeEffectTravelCostDiscountPct UpgradeEffectType = "TravelCostDiscountPercent"
+	UpgradeEffectMissionRewardBonusPct UpgradeEffectType = "MissionRewardBonusPercent"
+)
+
+func (e UpgradeEffectType) IsValid() bool {
+	switch e {
+	case UpgradeEffectCargoLimitBonus, UpgradeEffectTravelCostDiscountPct, UpgradeEffectMissionRewardBonusPct:
+		return true
+	default:
+		return false
+	}
+}
+
+type UpgradeEffectDefinition struct {
+	Type  UpgradeEffectType `json:"type"`
+	Value int               `json:"value"`
+}
+
+type ShipUpgradeDefinition struct {
+	ID                string                    `json:"id"`
+	Name              string                    `json:"name"`
+	Description       string                    `json:"description"`
+	Category          UpgradeCategory           `json:"category"`
+	CostCredits       int                       `json:"costCredits"`
+	RequiredFactionID string                    `json:"requiredFactionId,omitempty"`
+	MinimumStanding   string                    `json:"minimumStanding,omitempty"`
+	Specialization    ShipSpecialization        `json:"specialization,omitempty"`
+	Effects           []UpgradeEffectDefinition `json:"effects"`
+}
+
 type DataSnapshot struct {
 	Ports         []PortDefinition
 	Items         []ItemDefinition
@@ -184,12 +252,14 @@ type DataSnapshot struct {
 	Factions      []FactionDefinition
 	Missions      []MissionDefinition
 	StoryArcs     []StoryArcDefinition
+	Upgrades      []ShipUpgradeDefinition
 	PortsByID     map[string]PortDefinition
 	ItemsByID     map[string]ItemDefinition
 	EventsByID    map[string]EventDefinition
 	FactionsByID  map[string]FactionDefinition
 	MissionsByID  map[string]MissionDefinition
 	StoryArcsByID map[string]StoryArcDefinition
+	UpgradesByID  map[string]ShipUpgradeDefinition
 }
 
 func NewDataSnapshot(
@@ -199,6 +269,7 @@ func NewDataSnapshot(
 	factions []FactionDefinition,
 	missions []MissionDefinition,
 	storyArcs []StoryArcDefinition,
+	upgrades []ShipUpgradeDefinition,
 ) DataSnapshot {
 	snapshot := DataSnapshot{
 		Ports:         append([]PortDefinition(nil), ports...),
@@ -207,12 +278,14 @@ func NewDataSnapshot(
 		Factions:      append([]FactionDefinition(nil), factions...),
 		Missions:      append([]MissionDefinition(nil), missions...),
 		StoryArcs:     append([]StoryArcDefinition(nil), storyArcs...),
+		Upgrades:      append([]ShipUpgradeDefinition(nil), upgrades...),
 		PortsByID:     make(map[string]PortDefinition, len(ports)),
 		ItemsByID:     make(map[string]ItemDefinition, len(items)),
 		EventsByID:    make(map[string]EventDefinition, len(events)),
 		FactionsByID:  make(map[string]FactionDefinition, len(factions)),
 		MissionsByID:  make(map[string]MissionDefinition, len(missions)),
 		StoryArcsByID: make(map[string]StoryArcDefinition, len(storyArcs)),
+		UpgradesByID:  make(map[string]ShipUpgradeDefinition, len(upgrades)),
 	}
 
 	for _, port := range ports {
@@ -237,6 +310,10 @@ func NewDataSnapshot(
 
 	for _, storyArc := range storyArcs {
 		snapshot.StoryArcsByID[storyArc.ID] = storyArc
+	}
+
+	for _, upgrade := range upgrades {
+		snapshot.UpgradesByID[upgrade.ID] = upgrade
 	}
 
 	return snapshot

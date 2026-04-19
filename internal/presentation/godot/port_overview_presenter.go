@@ -21,15 +21,17 @@ type PortOverviewViewModel struct {
 	RecentEventText       string
 	AvailableGoods        []string
 	StoryNotices          []string
+	ProgressionNotices    []string
 	StatusMessage         string
 }
 
 type PortOverviewPresenter struct {
-	Data    domain.DataSnapshot
-	Economy services.EconomyService
-	Travel  services.TravelService
-	RunEval services.RunEvaluator
-	Story   StoryPresenter
+	Data        domain.DataSnapshot
+	Economy     services.EconomyService
+	Travel      services.TravelService
+	RunEval     services.RunEvaluator
+	Story       StoryPresenter
+	Progression ProgressionPresenter
 }
 
 func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride string) (PortOverviewViewModel, error) {
@@ -47,6 +49,7 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 	isGameOver := p.RunEval.IsGameOver(run, p.Data, p.Economy, p.Travel)
 	cheapestTravelCost := p.Travel.GetCheapestTravelCostFromPort(port, p.Data.Ports)
 	storyViewModel := p.Story.Present(run)
+	progressionViewModel := p.Progression.Present(run)
 	statusMessage := statusOverride
 	if statusMessage == "" {
 		if isGameOver {
@@ -60,6 +63,8 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 		}
 		if len(storyViewModel.MissionNotices) > 0 {
 			statusMessage += "\n" + storyViewModel.MissionNotices[0]
+		} else if len(progressionViewModel.AvailableUpgradeNotices) > 0 {
+			statusMessage += "\n" + progressionViewModel.AvailableUpgradeNotices[0]
 		}
 	}
 
@@ -77,6 +82,7 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 		RecentEventText:       recentEventDescription(run.RecentEvent),
 		AvailableGoods:        availableGoods,
 		StoryNotices:          append(append([]string{}, storyViewModel.FactionNotices...), append(storyViewModel.MissionNotices, storyViewModel.StoryNotices...)...),
+		ProgressionNotices:    append(append([]string{}, progressionViewModel.OwnedUpgradeNotices...), append(progressionViewModel.AvailableUpgradeNotices, progressionViewModel.SpecializationNotices...)...),
 		StatusMessage:         statusMessage,
 	}, nil
 }

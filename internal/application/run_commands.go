@@ -16,6 +16,7 @@ type RunCommands struct {
 	Balance  services.EconomyBalanceService
 	Trade    services.TradeService
 	Travel   services.TravelService
+	Upgrades services.UpgradeService
 	RunEval  services.RunEvaluator
 }
 
@@ -91,9 +92,10 @@ func (c RunCommands) PreviewTravel(run domain.RunState) ([]services.TravelQuote,
 	destinations := c.Travel.GetDestinationsFromPort(origin, c.Data.Ports)
 	quotes := make([]services.TravelQuote, 0, len(destinations))
 	for _, destination := range destinations {
+		baseCost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(run, origin.ID, destination.ID)
 		quotes = append(quotes, services.TravelQuote{
 			Destination: destination,
-			Cost:        c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(run, origin.ID, destination.ID),
+			Cost:        c.Upgrades.AdjustTravelCost(run, baseCost, c.Data),
 		})
 	}
 	return quotes, nil
@@ -110,7 +112,8 @@ func (c RunCommands) CommitBaselineTravel(run *domain.RunState, destinationPortI
 		return "", fmt.Errorf("destination port %q was not found", destinationPortID)
 	}
 
-	cost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(*run, origin.ID, destination.ID)
+	baseCost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(*run, origin.ID, destination.ID)
+	cost := c.Upgrades.AdjustTravelCost(*run, baseCost, c.Data)
 	if run.Player.Credits < cost {
 		return "", fmt.Errorf("you need %d credits to reach %s", cost, destination.Name)
 	}

@@ -41,7 +41,7 @@ func TestEventServiceSelectsDeterministicWeightedTravelEvent(t *testing.T) {
 		},
 	}
 
-	snapshot := domain.NewDataSnapshot(ports, items, events, nil, nil, nil)
+	snapshot := domain.NewDataSnapshot(ports, items, events, nil, nil, nil, nil)
 	run := domain.NewRunState()
 	run.Player.CurrentPortID = "mars"
 	run.MarketsByPortID["mars"] = domain.MarketSnapshot{
