@@ -58,23 +58,23 @@
 
 ### Tests for User Story 1
 
-- [ ] T018 [P] [US1] Add travel cost parity tests against MonoGame rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_cost_test.go`
-- [ ] T018A [P] [US1] Add tests locking the MVP travel-pressure model to route credit cost, jump-count progression, and event risk in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_pressure_test.go`
-- [ ] T019 [P] [US1] Add market generation and pricing parity tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_service_test.go`
-- [ ] T020 [P] [US1] Add trade transaction and cargo-cap validation tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/trade_service_test.go`
-- [ ] T021 [P] [US1] Add run evaluator tests for stranded and recoverable states in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/run_evaluator_test.go`
+- [X] T018 [P] [US1] Add travel cost parity tests against MonoGame rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_cost_test.go`
+- [X] T018A [P] [US1] Add tests locking the MVP travel-pressure model to route credit cost, jump-count progression, and event risk in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_pressure_test.go`
+- [X] T019 [P] [US1] Add market generation and pricing parity tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_service_test.go`
+- [X] T020 [P] [US1] Add trade transaction and cargo-cap validation tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/trade_service_test.go`
+- [X] T021 [P] [US1] Add run evaluator tests for stranded and recoverable states in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/run_evaluator_test.go`
 
 ### Implementation for User Story 1
 
-- [ ] T022 [P] [US1] Implement the run factory and starter state rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/run_factory.go`
-- [ ] T023 [P] [US1] Implement economy rules and market refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_service.go`
-- [ ] T024 [P] [US1] Implement trade validation and transaction application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/trade_service.go`
-- [ ] T025 [P] [US1] Implement travel cost, route payment validation, and destination resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/travel_service.go`
-- [ ] T026 [P] [US1] Implement run viability and game-over evaluation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/run_evaluator.go`
+- [X] T022 [P] [US1] Implement the run factory and starter state rules in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/run_factory.go`
+- [X] T023 [P] [US1] Implement economy rules and market refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_service.go`
+- [X] T024 [P] [US1] Implement trade validation and transaction application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/trade_service.go`
+- [X] T025 [P] [US1] Implement travel cost, route payment validation, and destination resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/travel_service.go`
+- [X] T026 [P] [US1] Implement run viability and game-over evaluation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/run_evaluator.go`
 - [ ] T026A [P] [US1] Add regression tests for repeated short-route and single-commodity exploit patterns in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_balance_test.go`
 - [ ] T026B [US1] Implement anti-exploit market pressure rules for repeated route farming in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_balance_service.go`
 - [ ] T026C [US1] Integrate exploit-pressure adjustments into market refresh and route resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
-- [ ] T027 [US1] Implement application commands for new run, continue, trade, travel preview, baseline travel commit, and save in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
+- [X] T027 [US1] Implement application commands for new run, continue, trade, travel preview, baseline travel commit, and save in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
 - [ ] T028 [P] [US1] Implement main menu presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/main_menu_presenter.go`
 - [ ] T029 [P] [US1] Implement port overview presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
 - [ ] T030 [P] [US1] Implement trade presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/trade_presenter.go`
