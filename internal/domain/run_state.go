@@ -52,13 +52,6 @@ type MarketSnapshot struct {
 	PricesByItemID   map[string]int
 }
 
-type EventResult struct {
-	EventID             string
-	Name                string
-	ResolvedDescription string
-	RolledValues        map[string]float64
-}
-
 type RouteStatus string
 
 const (

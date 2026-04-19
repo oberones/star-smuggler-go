@@ -53,7 +53,7 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 		}
 
 		if run.RecentEvent != nil && run.RecentEvent.ResolvedDescription != "" {
-			statusMessage += "\nRecent event: " + run.RecentEvent.ResolvedDescription
+			statusMessage += "\nRecent event outcome: " + run.RecentEvent.ResolvedDescription
 		}
 	}
 

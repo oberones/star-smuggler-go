@@ -22,6 +22,10 @@ type TravelScreen interface {
 	Bind(TravelScreenViewModel)
 }
 
+type TravelAnimationScreen interface {
+	Bind(TravelAnimationViewModel)
+}
+
 type GameOverScreen interface {
 	SetSummary(string)
 	SetRecoveryState(bool, string)
@@ -32,6 +36,7 @@ type SceneBindings struct {
 	PortOverview PortOverviewPresenter
 	Trade        TradePresenter
 	Travel       TravelPresenter
+	TravelAnim   TravelAnimationPresenter
 	GameOver     GameOverPresenter
 }
 
@@ -58,6 +63,9 @@ func NewSceneBindings(
 			Data:    data,
 			Travel:  travel,
 			Balance: balance,
+		},
+		TravelAnim: TravelAnimationPresenter{
+			Data: data,
 		},
 		GameOver: GameOverPresenter{
 			Data:    data,
@@ -95,6 +103,16 @@ func (b SceneBindings) BindTrade(screen TradeScreen, run domain.RunState, status
 
 func (b SceneBindings) BindTravel(screen TravelScreen, run domain.RunState, quotes []services.TravelQuote, statusOverride string) error {
 	viewModel, err := b.Travel.Present(run, quotes, statusOverride)
+	if err != nil {
+		return err
+	}
+
+	screen.Bind(viewModel)
+	return nil
+}
+
+func (b SceneBindings) BindTravelAnimation(screen TravelAnimationScreen, run domain.RunState, durationSeconds float64, statusOverride string) error {
+	viewModel, err := b.TravelAnim.Present(run, durationSeconds, statusOverride)
 	if err != nil {
 		return err
 	}

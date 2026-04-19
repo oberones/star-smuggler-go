@@ -146,6 +146,7 @@ custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
+tooltip_text = "Destination preview art for the selected route."
 
 [node name="CostLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
 unique_name_in_owner = true
@@ -159,6 +160,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 autowrap_mode = 3
 text = "Choose a route."
+
+[node name="FlowHintLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+autowrap_mode = 3
+text = "Selecting Travel starts the transit sequence, then returns you to port with any route events applied."
 
 [node name="ActionRow" type="HBoxContainer" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
 layout_mode = 2

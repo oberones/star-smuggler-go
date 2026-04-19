@@ -99,19 +99,19 @@
 
 ### Tests for User Story 2
 
-- [ ] T035 [P] [US2] Add deterministic travel event selection tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/event_service_test.go`
-- [ ] T036 [P] [US2] Add travel resolution tests covering arrival refresh, jump count, and event application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_resolution_test.go`
-- [ ] T037 [P] [US2] Add smoke coverage for travel route transitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/travel_flow_check.sh`
+- [X] T035 [P] [US2] Add deterministic travel event selection tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/event_service_test.go`
+- [X] T036 [P] [US2] Add travel resolution tests covering arrival refresh, jump count, and event application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/travel_resolution_test.go`
+- [X] T037 [P] [US2] Add smoke coverage for travel route transitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/travel_flow_check.sh`
 
 ### Implementation for User Story 2
 
-- [ ] T038 [P] [US2] Implement typed travel event definitions and resolved event results in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/event_types.go`
-- [ ] T039 [P] [US2] Implement event rolling and effect resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/event_service.go`
-- [ ] T040 [US2] Extend travel commands with event resolution, jump progression handling, and final arrival refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/travel_commands.go`
-- [ ] T041 [P] [US2] Implement the travel animation presenter and state bridge in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/travel_animation_presenter.go`
-- [ ] T042 [US2] Preserve MonoGame-like travel animation pacing, route labels, and skip behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
-- [ ] T043 [US2] Surface recent event outcomes back into the port overview contract in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
-- [ ] T044 [US2] Ensure travel visuals keep the current cockpit, preview, and terminal composition in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelScreen.tscn` and `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
+- [X] T038 [P] [US2] Implement typed travel event definitions and resolved event results in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/event_types.go`
+- [X] T039 [P] [US2] Implement event rolling and effect resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/event_service.go`
+- [X] T040 [US2] Extend travel commands with event resolution, jump progression handling, and final arrival refresh behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/travel_commands.go`
+- [X] T041 [P] [US2] Implement the travel animation presenter and state bridge in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/travel_animation_presenter.go`
+- [X] T042 [US2] Preserve MonoGame-like travel animation pacing, route labels, and skip behavior in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
+- [X] T043 [US2] Surface recent event outcomes back into the port overview contract in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
+- [X] T044 [US2] Ensure travel visuals keep the current cockpit, preview, and terminal composition in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelScreen.tscn` and `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelAnimationScreen.tscn`
 
 **Checkpoint**: User Stories 1 and 2 now form the full MonoGame-parity MVP and should be demoable end to end.
 
