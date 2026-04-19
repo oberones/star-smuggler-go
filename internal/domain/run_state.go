@@ -76,13 +76,16 @@ type RouteState struct {
 }
 
 type RunState struct {
-	Player               PlayerShipState
-	Cargo                CargoState
-	MarketsByPortID      map[string]MarketSnapshot
-	JumpsSinceLastUpdate int
-	TotalJumps           int
-	RecentEvent          *EventResult
-	PendingRoute         *RouteState
+	Player                    PlayerShipState
+	Cargo                     CargoState
+	MarketsByPortID           map[string]MarketSnapshot
+	RoutePressureByKey        map[string]int
+	CommodityPressureByItemID map[string]int
+	EmergencyRecoveryUsed     bool
+	JumpsSinceLastUpdate      int
+	TotalJumps                int
+	RecentEvent               *EventResult
+	PendingRoute              *RouteState
 }
 
 func NewRunState() RunState {
@@ -91,7 +94,9 @@ func NewRunState() RunState {
 			Credits:    StartingCredits,
 			CargoLimit: StartingCargoLimit,
 		},
-		Cargo:           NewCargoState(),
-		MarketsByPortID: make(map[string]MarketSnapshot),
+		Cargo:                     NewCargoState(),
+		MarketsByPortID:           make(map[string]MarketSnapshot),
+		RoutePressureByKey:        make(map[string]int),
+		CommodityPressureByItemID: make(map[string]int),
 	}
 }

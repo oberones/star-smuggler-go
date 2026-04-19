@@ -3,13 +3,16 @@ package persistence
 const CurrentSaveVersion = 1
 
 type SaveData struct {
-	Version              int                      `json:"version"`
-	Player               PlayerSaveData           `json:"player"`
-	CargoByItemID        map[string]int           `json:"cargoByItemId"`
-	Markets              []MarketSnapshotSaveData `json:"markets"`
-	JumpsSinceLastUpdate int                      `json:"jumpsSinceLastUpdate"`
-	TotalJumps           int                      `json:"totalJumps"`
-	RecentEvent          *EventResultSaveData     `json:"recentEvent,omitempty"`
+	Version                   int                      `json:"version"`
+	Player                    PlayerSaveData           `json:"player"`
+	CargoByItemID             map[string]int           `json:"cargoByItemId"`
+	Markets                   []MarketSnapshotSaveData `json:"markets"`
+	RoutePressureByKey        map[string]int           `json:"routePressureByKey,omitempty"`
+	CommodityPressureByItemID map[string]int           `json:"commodityPressureByItemId,omitempty"`
+	EmergencyRecoveryUsed     bool                     `json:"emergencyRecoveryUsed"`
+	JumpsSinceLastUpdate      int                      `json:"jumpsSinceLastUpdate"`
+	TotalJumps                int                      `json:"totalJumps"`
+	RecentEvent               *EventResultSaveData     `json:"recentEvent,omitempty"`
 }
 
 type PlayerSaveData struct {

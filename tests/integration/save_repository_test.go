@@ -32,6 +32,9 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 			"alloy":      31,
 		},
 	}
+	run.RoutePressureByKey["mars->venus"] = 2
+	run.CommodityPressureByItemID["synthspice"] = 3
+	run.EmergencyRecoveryUsed = true
 	run.JumpsSinceLastUpdate = 2
 	run.TotalJumps = 7
 	run.RecentEvent = &domain.EventResult{
@@ -68,6 +71,15 @@ func TestJSONSaveRepositoryRoundTrip(t *testing.T) {
 	}
 	if !reflect.DeepEqual(loaded.MarketsByPortID, run.MarketsByPortID) {
 		t.Fatalf("markets mismatch: %#v != %#v", loaded.MarketsByPortID, run.MarketsByPortID)
+	}
+	if !reflect.DeepEqual(loaded.RoutePressureByKey, run.RoutePressureByKey) {
+		t.Fatalf("route pressure mismatch: %#v != %#v", loaded.RoutePressureByKey, run.RoutePressureByKey)
+	}
+	if !reflect.DeepEqual(loaded.CommodityPressureByItemID, run.CommodityPressureByItemID) {
+		t.Fatalf("commodity pressure mismatch: %#v != %#v", loaded.CommodityPressureByItemID, run.CommodityPressureByItemID)
+	}
+	if loaded.EmergencyRecoveryUsed != run.EmergencyRecoveryUsed {
+		t.Fatalf("recovery flag mismatch: %t != %t", loaded.EmergencyRecoveryUsed, run.EmergencyRecoveryUsed)
 	}
 	if loaded.JumpsSinceLastUpdate != run.JumpsSinceLastUpdate {
 		t.Fatalf("jump refresh mismatch: %d != %d", loaded.JumpsSinceLastUpdate, run.JumpsSinceLastUpdate)

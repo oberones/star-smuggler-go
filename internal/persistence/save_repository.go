@@ -152,11 +152,14 @@ func dehydrateRunState(run domain.RunState) SaveData {
 			CargoLimit:    run.Player.CargoLimit,
 			CurrentPortID: run.Player.CurrentPortID,
 		},
-		CargoByItemID:        cargo,
-		Markets:              markets,
-		JumpsSinceLastUpdate: run.JumpsSinceLastUpdate,
-		TotalJumps:           run.TotalJumps,
-		RecentEvent:          dehydrateEvent(run.RecentEvent),
+		CargoByItemID:             cargo,
+		Markets:                   markets,
+		RoutePressureByKey:        cloneIntMap(run.RoutePressureByKey),
+		CommodityPressureByItemID: cloneIntMap(run.CommodityPressureByItemID),
+		EmergencyRecoveryUsed:     run.EmergencyRecoveryUsed,
+		JumpsSinceLastUpdate:      run.JumpsSinceLastUpdate,
+		TotalJumps:                run.TotalJumps,
+		RecentEvent:               dehydrateEvent(run.RecentEvent),
 	}
 }
 
@@ -167,6 +170,9 @@ func hydrateRunState(save SaveData) domain.RunState {
 	run.Player.CurrentPortID = save.Player.CurrentPortID
 	run.Cargo.ItemQuantities = cloneIntMap(save.CargoByItemID)
 	run.MarketsByPortID = make(map[string]domain.MarketSnapshot, len(save.Markets))
+	run.RoutePressureByKey = cloneIntMap(save.RoutePressureByKey)
+	run.CommodityPressureByItemID = cloneIntMap(save.CommodityPressureByItemID)
+	run.EmergencyRecoveryUsed = save.EmergencyRecoveryUsed
 	run.JumpsSinceLastUpdate = save.JumpsSinceLastUpdate
 	run.TotalJumps = save.TotalJumps
 	run.RecentEvent = hydrateEvent(save.RecentEvent)

@@ -71,21 +71,21 @@
 - [X] T024 [P] [US1] Implement trade validation and transaction application in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/trade_service.go`
 - [X] T025 [P] [US1] Implement travel cost, route payment validation, and destination resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/travel_service.go`
 - [X] T026 [P] [US1] Implement run viability and game-over evaluation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/run_evaluator.go`
-- [ ] T026A [P] [US1] Add regression tests for repeated short-route and single-commodity exploit patterns in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_balance_test.go`
-- [ ] T026B [US1] Implement anti-exploit market pressure rules for repeated route farming in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_balance_service.go`
-- [ ] T026C [US1] Integrate exploit-pressure adjustments into market refresh and route resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
+- [X] T026A [P] [US1] Add regression tests for repeated short-route and single-commodity exploit patterns in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/economy_balance_test.go`
+- [X] T026B [US1] Implement anti-exploit market pressure rules for repeated route farming in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/economy_balance_service.go`
+- [X] T026C [US1] Integrate exploit-pressure adjustments into market refresh and route resolution in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
 - [X] T027 [US1] Implement application commands for new run, continue, trade, travel preview, baseline travel commit, and save in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/run_commands.go`
-- [ ] T028 [P] [US1] Implement main menu presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/main_menu_presenter.go`
-- [ ] T029 [P] [US1] Implement port overview presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
-- [ ] T030 [P] [US1] Implement trade presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/trade_presenter.go`
-- [ ] T031 [P] [US1] Implement travel presenter and route preview view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/travel_presenter.go`
-- [ ] T032 [US1] Bind the Go presenters to the existing Godot scenes in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/scene_bindings.go`
+- [X] T028 [P] [US1] Implement main menu presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/main_menu_presenter.go`
+- [X] T029 [P] [US1] Implement port overview presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/port_overview_presenter.go`
+- [X] T030 [P] [US1] Implement trade presenter and view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/trade_presenter.go`
+- [X] T031 [P] [US1] Implement travel presenter and route preview view model in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/travel_presenter.go`
+- [X] T032 [US1] Bind the Go presenters to the existing Godot scenes in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/scene_bindings.go`
 - [ ] T033 [US1] Preserve the MonoGame-faithful MVP route flow and button actions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/MainMenuScreen.tscn`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/PortOverviewScreen.tscn`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TradeScreen.tscn`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/TravelScreen.tscn`
-- [ ] T034 [US1] Implement autosave and continue integration for the MVP loop in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/save_commands.go`
-- [ ] T034A [P] [US1] Add tests for recoverable setback vs. true game-over transitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/failure_state_test.go`
-- [ ] T034B [US1] Implement Game Over route presenter and summary mapping in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/game_over_presenter.go`
+- [X] T034 [US1] Implement autosave and continue integration for the MVP loop in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/save_commands.go`
+- [X] T034A [P] [US1] Add tests for recoverable setback vs. true game-over transitions in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/failure_state_test.go`
+- [X] T034B [US1] Implement Game Over route presenter and summary mapping in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/game_over_presenter.go`
 - [ ] T034C [US1] Bind the Go runtime to `/Users/oberon/Projects/coding/godot/star-smuggler-go/scenes/screens/GameOverScreen.tscn`
-- [ ] T034D [US1] Implement at least one explicit recovery mechanic short of game over in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/recovery_commands.go`
+- [X] T034D [US1] Implement at least one explicit recovery mechanic short of game over in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/recovery_commands.go`
 
 **Checkpoint**: User Story 1 should now provide the core economy loop and baseline inter-port trading, but the MonoGame-parity MVP is not complete until User Story 2 is finished.
 

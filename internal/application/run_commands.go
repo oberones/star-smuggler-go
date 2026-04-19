@@ -13,6 +13,7 @@ type RunCommands struct {
 	Runtime  services.RuntimeContext
 	SaveRepo SaveRepository
 	Economy  services.EconomyService
+	Balance  services.EconomyBalanceService
 	Trade    services.TradeService
 	Travel   services.TravelService
 	RunEval  services.RunEvaluator
@@ -56,7 +57,11 @@ func (c RunCommands) Buy(run *domain.RunState, itemID string, quantity int) (ser
 		return services.TradeResult{}, fmt.Errorf("current market is not available")
 	}
 
-	return c.Trade.Buy(run, market, item, quantity), nil
+	result := c.Trade.Buy(run, market, item, quantity)
+	if result.Succeeded {
+		c.Balance.RecordCommodityTrade(run, itemID, quantity)
+	}
+	return result, nil
 }
 
 func (c RunCommands) Sell(run *domain.RunState, itemID string, quantity int) (services.TradeResult, error) {
@@ -70,7 +75,11 @@ func (c RunCommands) Sell(run *domain.RunState, itemID string, quantity int) (se
 		return services.TradeResult{}, fmt.Errorf("current market is not available")
 	}
 
-	return c.Trade.Sell(run, market, item, quantity), nil
+	result := c.Trade.Sell(run, market, item, quantity)
+	if result.Succeeded {
+		c.Balance.RecordCommodityTrade(run, itemID, quantity)
+	}
+	return result, nil
 }
 
 func (c RunCommands) PreviewTravel(run domain.RunState) ([]services.TravelQuote, error) {
@@ -84,7 +93,7 @@ func (c RunCommands) PreviewTravel(run domain.RunState) ([]services.TravelQuote,
 	for _, destination := range destinations {
 		quotes = append(quotes, services.TravelQuote{
 			Destination: destination,
-			Cost:        c.Travel.GetTravelCost(origin, destination),
+			Cost:        c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(run, origin.ID, destination.ID),
 		})
 	}
 	return quotes, nil
@@ -101,7 +110,7 @@ func (c RunCommands) CommitBaselineTravel(run *domain.RunState, destinationPortI
 		return "", fmt.Errorf("destination port %q was not found", destinationPortID)
 	}
 
-	cost := c.Travel.GetTravelCost(origin, destination)
+	cost := c.Travel.GetTravelCost(origin, destination) + c.Balance.AdditionalRouteCost(*run, origin.ID, destination.ID)
 	if run.Player.Credits < cost {
 		return "", fmt.Errorf("you need %d credits to reach %s", cost, destination.Name)
 	}
@@ -117,12 +126,14 @@ func (c RunCommands) CommitBaselineTravel(run *domain.RunState, destinationPortI
 		Status:            domain.RouteStatusResolved,
 	}
 	run.RecentEvent = nil
+	c.Balance.RecordRoute(run, origin.ID, destination.ID)
 
 	if run.JumpsSinceLastUpdate > 3 {
 		c.Economy.RefreshAllPrices(run, c.Data, c.Runtime.RNG)
 	} else {
 		c.Economy.RefreshAvailableGoods(run, c.Data, destination.ID, c.Runtime.RNG)
 	}
+	c.Balance.ApplyMarketPressure(run, c.Data)
 
 	return fmt.Sprintf("Traveled to %s for %d credits.", destination.Name, cost), nil
 }
