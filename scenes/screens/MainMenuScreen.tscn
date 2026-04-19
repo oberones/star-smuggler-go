@@ -69,6 +69,13 @@ text = "Smuggle cargo, survive the route, and keep one jump ahead of ruin."
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="FlowLabel" type="Label" parent="MarginContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Route flow: Main Menu -> Port Overview -> Trade / Travel -> Port Overview"
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="Spacer" type="Control" parent="MarginContainer/Panel/VBox"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
@@ -77,18 +84,21 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+tooltip_text = "Begin a fresh run from your starting port."
 text = "Start New Run"
 
 [node name="ContinueButton" type="Button" parent="MarginContainer/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+tooltip_text = "Resume the last autosaved or manual save."
 text = "Continue Saved Run"
 
 [node name="QuitButton" type="Button" parent="MarginContainer/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+tooltip_text = "Exit the current build."
 text = "Quit"
 
 [node name="StatusLabel" type="Label" parent="MarginContainer/Panel/VBox"]

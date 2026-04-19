@@ -109,6 +109,7 @@ public partial class SaveService : Node
                 AvailableItemIds = new List<string>(market.AvailableItemIds),
                 PricesByItemId = new Dictionary<string, int>(market.PricesByItemId, StringComparer.Ordinal),
             }).ToList(),
+            EmergencyRecoveryUsed = run.EmergencyRecoveryUsed,
             JumpsSinceLastUpdate = run.JumpsSinceLastUpdate,
             RecentEvent = run.RecentEvent is null
                 ? null
@@ -150,6 +151,7 @@ public partial class SaveService : Node
             },
             Cargo = cargo,
             MarketsByPortId = markets,
+            EmergencyRecoveryUsed = dto.EmergencyRecoveryUsed,
             JumpsSinceLastUpdate = dto.JumpsSinceLastUpdate,
             RecentEvent = dto.RecentEvent is null
                 ? null

@@ -8,7 +8,9 @@ import (
 )
 
 type GameOverViewModel struct {
-	Summary string
+	Summary        string
+	CanRecover     bool
+	RecoveryStatus string
 }
 
 type GameOverPresenter struct {
@@ -18,10 +20,18 @@ type GameOverPresenter struct {
 }
 
 func (p GameOverPresenter) Present(run domain.RunState) (GameOverViewModel, error) {
+	recoveryStatus := "Emergency recovery has already been used this run."
+	canRecover := !run.EmergencyRecoveryUsed
+	if canRecover {
+		recoveryStatus = "Emergency recovery can grant one last credit infusion to escape this port."
+	}
+
 	port, ok := p.Data.PortsByID[run.Player.CurrentPortID]
 	if !ok {
 		return GameOverViewModel{
-			Summary: "This run ended, but the current port could not be resolved.",
+			Summary:        "This run ended, but the current port could not be resolved.",
+			CanRecover:     canRecover,
+			RecoveryStatus: recoveryStatus,
 		}, nil
 	}
 
@@ -36,5 +46,7 @@ func (p GameOverPresenter) Present(run domain.RunState) (GameOverViewModel, erro
 			cargoValue,
 			cheapestTravel,
 		),
+		CanRecover:     canRecover,
+		RecoveryStatus: recoveryStatus,
 	}, nil
 }

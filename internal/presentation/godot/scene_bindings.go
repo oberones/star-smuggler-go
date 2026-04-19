@@ -24,6 +24,7 @@ type TravelScreen interface {
 
 type GameOverScreen interface {
 	SetSummary(string)
+	SetRecoveryState(bool, string)
 }
 
 type SceneBindings struct {
@@ -109,5 +110,6 @@ func (b SceneBindings) BindGameOver(screen GameOverScreen, run domain.RunState) 
 	}
 
 	screen.SetSummary(viewModel.Summary)
+	screen.SetRecoveryState(viewModel.CanRecover, viewModel.RecoveryStatus)
 	return nil
 }

@@ -8,6 +8,7 @@ public sealed class SaveData
     public PlayerSaveData Player { get; set; } = new();
     public Dictionary<string, int> CargoByItemId { get; set; } = new();
     public List<MarketSnapshotSaveData> Markets { get; set; } = new();
+    public bool EmergencyRecoveryUsed { get; set; }
     public int JumpsSinceLastUpdate { get; set; }
     public EventResultSaveData? RecentEvent { get; set; }
 }

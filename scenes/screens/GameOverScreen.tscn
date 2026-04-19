@@ -61,6 +61,21 @@ autowrap_mode = 3
 horizontal_alignment = 1
 text = "Run summary"
 
+[node name="RecoveryButton" type="Button" parent="MarginContainer/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+tooltip_text = "Spend your one emergency bailout to regain enough credits for another jump."
+text = "Emergency Recovery"
+
+[node name="RecoveryStatusLabel" type="Label" parent="MarginContainer/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+horizontal_alignment = 1
+text = "Emergency recovery status"
+
 [node name="RestartButton" type="Button" parent="MarginContainer/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)

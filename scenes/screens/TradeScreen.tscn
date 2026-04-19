@@ -65,6 +65,12 @@ theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 text = "Credits and cargo summary"
 
+[node name="RouteHintLabel" type="Label" parent="OuterMargin/VBox/HeaderPanel/HeaderMargin/HeaderVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+autowrap_mode = 3
+text = "Work the local prices here, then head back to port overview when you're ready for the next decision."
+
 [node name="ContentRow" type="HBoxContainer" parent="OuterMargin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -164,12 +170,14 @@ theme_override_constants/separation = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 48)
 layout_mode = 2
+tooltip_text = "Purchase the selected quantity at the current price."
 text = "Buy"
 
 [node name="SellButton" type="Button" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox/ActionRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 48)
 layout_mode = 2
+tooltip_text = "Sell the selected quantity from your cargo hold."
 text = "Sell"
 
 [node name="StatusLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
@@ -187,4 +195,5 @@ theme_override_constants/separation = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
+tooltip_text = "Return to the current port overview."
 text = "Back To Port"

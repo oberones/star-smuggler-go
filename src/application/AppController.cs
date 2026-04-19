@@ -263,6 +263,8 @@ public partial class AppController : Node
         }
 
         screen.SetSummary(BuildGameOverSummary(run, _dataRepository.Snapshot));
+        screen.SetRecoveryState(CanOfferEmergencyRecovery(run), BuildRecoveryStatus(run, _dataRepository.Snapshot));
+        screen.RecoveryRequested += OnRecoveryRequested;
         screen.RestartRequested += OnStartRequested;
         screen.MenuRequested += () =>
         {
@@ -561,6 +563,54 @@ public partial class AppController : Node
                _runEvaluator.IsGameOver(run, _dataRepository.Snapshot, _economyService, _travelService);
     }
 
+    private bool CanOfferEmergencyRecovery(RunState run)
+    {
+        return !run.EmergencyRecoveryUsed;
+    }
+
+    private void OnRecoveryRequested()
+    {
+        if (_gameSession?.CurrentRun is not RunState run || _dataRepository is null)
+        {
+            return;
+        }
+
+        _audioService?.PlaySfx("click");
+
+        if (run.EmergencyRecoveryUsed)
+        {
+            RefreshGameOverScreen();
+            return;
+        }
+
+        if (!_dataRepository.Snapshot.PortsById.TryGetValue(run.Player.CurrentPortId, out PortDefinition? port))
+        {
+            RefreshGameOverScreen();
+            return;
+        }
+
+        int cheapestTravelCost = _travelService.GetCheapestTravelCostFromPort(port, _dataRepository.Snapshot.Ports);
+        int recoveryGrant = Math.Max(25, cheapestTravelCost - run.Player.Credits);
+        run.Player.Credits += recoveryGrant;
+        run.EmergencyRecoveryUsed = true;
+        _gameSession.SaveCurrentRun();
+
+        NavigateTo(RouteForCurrentRun());
+    }
+
+    private void RefreshGameOverScreen()
+    {
+        if (_currentScreen is not GameOverScreen gameOverScreen ||
+            _gameSession?.CurrentRun is not RunState run ||
+            _dataRepository is null)
+        {
+            return;
+        }
+
+        gameOverScreen.SetSummary(BuildGameOverSummary(run, _dataRepository.Snapshot));
+        gameOverScreen.SetRecoveryState(CanOfferEmergencyRecovery(run), BuildRecoveryStatus(run, _dataRepository.Snapshot));
+    }
+
     private string BuildGameOverSummary(RunState run, DataSnapshot data)
     {
         if (!data.PortsById.TryGetValue(run.Player.CurrentPortId, out PortDefinition? port))
@@ -577,6 +627,23 @@ public partial class AppController : Node
             $"Sellable cargo value: {cargoValue}\n" +
             $"Cheapest travel cost: {cheapestTravel}\n\n" +
             $"No route remains that your current cash and cargo can cover.";
+    }
+
+    private string BuildRecoveryStatus(RunState run, DataSnapshot data)
+    {
+        if (run.EmergencyRecoveryUsed)
+        {
+            return "Emergency recovery has already been used this run.";
+        }
+
+        if (!data.PortsById.TryGetValue(run.Player.CurrentPortId, out PortDefinition? port))
+        {
+            return "Emergency recovery is unavailable because the current port could not be resolved.";
+        }
+
+        int cheapestTravelCost = _travelService.GetCheapestTravelCostFromPort(port, data.Ports);
+        int recoveryGrant = Math.Max(25, cheapestTravelCost - run.Player.Credits);
+        return $"Emergency recovery will grant {recoveryGrant} credits so you can attempt one more route.";
     }
 
     private void PlayRouteMusic(AppRoute route)
