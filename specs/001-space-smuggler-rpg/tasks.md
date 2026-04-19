@@ -17,11 +17,11 @@
 
 **Purpose**: Bootstrap the Go + `go-dot` runtime and establish the new source layout without breaking the existing Godot project shell.
 
-- [ ] T001 Create the Go module and initial dependency manifest in `/Users/oberon/Projects/coding/godot/star-smuggler-go/go.mod`
-- [ ] T002 Create the application entrypoint scaffold in `/Users/oberon/Projects/coding/godot/star-smuggler-go/cmd/starsmuggler/main.go`
-- [ ] T003 [P] Create the internal package directory skeleton with package docs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/.gitkeep`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/.gitkeep`
-- [ ] T004 [P] Create the Go test directory skeleton in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/golden/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/.gitkeep`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/.gitkeep`
-- [ ] T005 Document the Go + `go-dot` bootstrap and developer commands in `/Users/oberon/Projects/coding/godot/star-smuggler-go/README.md`
+- [X] T001 Create the Go module and initial dependency manifest in `/Users/oberon/Projects/coding/godot/star-smuggler-go/go.mod`
+- [X] T002 Create the application entrypoint scaffold in `/Users/oberon/Projects/coding/godot/star-smuggler-go/cmd/starsmuggler/main.go`
+- [X] T003 [P] Create the internal package directory skeleton with package docs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/.gitkeep`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/.gitkeep`
+- [X] T004 [P] Create the Go test directory skeleton in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/golden/.gitkeep`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/.gitkeep`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/.gitkeep`
+- [X] T005 Document the Go + `go-dot` bootstrap and developer commands in `/Users/oberon/Projects/coding/godot/star-smuggler-go/README.md`
 
 ---
 
@@ -31,20 +31,20 @@
 
 **⚠️ CRITICAL**: No user story work should be considered complete until this phase is done.
 
-- [ ] T006 Implement content loader abstractions for ports, items, and events in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/loader.go`
-- [ ] T007 [P] Define stable authored content structs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/content_types.go`
-- [ ] T008 [P] Define runtime state structs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/run_state.go`
-- [ ] T009 [P] Define save DTOs and save version constants in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/save_types.go`
-- [ ] T010 Implement deterministic RNG and service wiring primitives in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/runtime_context.go`
-- [ ] T011 Implement JSON content loading and validation for `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/ports/ports.json`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/items/items.json`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/events/events.json` in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/json_repository.go`
-- [ ] T012 Implement save read/write and versioned hydration in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/save_repository.go`
-- [ ] T013 Implement the Go application coordinator and route enum in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/app.go`
-- [ ] T014 Implement the `go-dot` bridge shell for scene registration and route binding in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/app_bridge.go`
-- [ ] T014A Create the C# runtime retirement checklist in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/csharp-runtime-retirement.md`
-- [ ] T014B Audit and disable competing C# runtime authority in `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/application/AppController.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/GameSession.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/DataRepository.cs`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/SaveService.cs`
-- [ ] T015 [P] Add golden tests for content loading in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/golden/content_repository_test.go`
-- [ ] T016 [P] Add save round-trip and version tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/save_repository_test.go`
-- [ ] T017 [P] Add a headless smoke runner script for Godot boot validation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/run_headless_smoke.sh`
+- [X] T006 Implement content loader abstractions for ports, items, and events in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/loader.go`
+- [X] T007 [P] Define stable authored content structs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/content_types.go`
+- [X] T008 [P] Define runtime state structs in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/domain/run_state.go`
+- [X] T009 [P] Define save DTOs and save version constants in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/save_types.go`
+- [X] T010 Implement deterministic RNG and service wiring primitives in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/services/runtime_context.go`
+- [X] T011 Implement JSON content loading and validation for `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/ports/ports.json`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/items/items.json`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/data/events/events.json` in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/content/json_repository.go`
+- [X] T012 Implement save read/write and versioned hydration in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/persistence/save_repository.go`
+- [X] T013 Implement the Go application coordinator and route enum in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/application/app.go`
+- [X] T014 Implement the `go-dot` bridge shell for scene registration and route binding in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/app_bridge.go`
+- [X] T014A Create the C# runtime retirement checklist in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/csharp-runtime-retirement.md`
+- [X] T014B Audit and disable competing C# runtime authority in `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/application/AppController.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/GameSession.cs`, `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/DataRepository.cs`, and `/Users/oberon/Projects/coding/godot/star-smuggler-go/src/autoload/SaveService.cs`
+- [X] T015 [P] Add golden tests for content loading in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/golden/content_repository_test.go`
+- [X] T016 [P] Add save round-trip and version tests in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/integration/save_repository_test.go`
+- [X] T017 [P] Add a headless smoke runner script for Godot boot validation in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/run_headless_smoke.sh`
 
 **Checkpoint**: Foundation ready. User stories can now proceed in priority order and remain independently testable.
 

@@ -18,8 +18,21 @@ public partial class DataRepository : Node
 
     public override void _Ready()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("DataRepository is passive because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         Snapshot = LoadSnapshot();
         IsInitialized = true;
+    }
+
+    private static bool IsGoRuntimeAuthorityEnabled()
+    {
+        string value = OS.GetEnvironment("STARSMUGGLER_GO_RUNTIME");
+        return string.Equals(value, "1", StringComparison.Ordinal) ||
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private static DataSnapshot LoadSnapshot()

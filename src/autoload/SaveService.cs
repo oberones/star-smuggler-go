@@ -16,11 +16,22 @@ public partial class SaveService : Node
 
     public bool HasSave()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            return false;
+        }
+
         return Godot.FileAccess.FileExists(SavePath);
     }
 
     public void SaveRun(RunState run)
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("SaveService.SaveRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         SaveData dto = ToSaveData(run);
         string json = JsonSerializer.Serialize(dto, new JsonSerializerOptions
         {
@@ -33,6 +44,12 @@ public partial class SaveService : Node
 
     public RunState? LoadRun()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("SaveService.LoadRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return null;
+        }
+
         if (!HasSave())
         {
             return null;
@@ -55,10 +72,23 @@ public partial class SaveService : Node
 
     public void DeleteSave()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("SaveService.DeleteSave ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         if (HasSave())
         {
             DirAccess.RemoveAbsolute(ProjectSettings.GlobalizePath(SavePath));
         }
+    }
+
+    private static bool IsGoRuntimeAuthorityEnabled()
+    {
+        string value = OS.GetEnvironment("STARSMUGGLER_GO_RUNTIME");
+        return string.Equals(value, "1", StringComparison.Ordinal) ||
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private static SaveData ToSaveData(RunState run)

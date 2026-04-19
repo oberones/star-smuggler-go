@@ -6,3 +6,16 @@
 bin/
 obj/
 .vscode/
+
+# Go bootstrap artifacts
+*.exe
+*.test
+*.out
+coverage.out
+vendor/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp

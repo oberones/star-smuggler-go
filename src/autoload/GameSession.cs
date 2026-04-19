@@ -19,12 +19,24 @@ public partial class GameSession : Node
 
     public override void _Ready()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("GameSession is passive because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         _dataRepository = GetNodeOrNull<DataRepository>("%DataRepository");
         _saveService = GetNodeOrNull<SaveService>("%SaveService");
     }
 
     public void StartNewRun()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("GameSession.StartNewRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         if (_dataRepository is null)
         {
             GD.PushError("GameSession could not find %DataRepository.");
@@ -38,6 +50,12 @@ public partial class GameSession : Node
 
     public bool TryLoadSavedRun()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("GameSession.TryLoadSavedRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return false;
+        }
+
         if (_saveService is null || !_saveService.HasSave())
         {
             return false;
@@ -56,6 +74,12 @@ public partial class GameSession : Node
 
     public void SaveCurrentRun()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("GameSession.SaveCurrentRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         if (CurrentRun is not null)
         {
             _saveService?.SaveRun(CurrentRun);
@@ -64,7 +88,20 @@ public partial class GameSession : Node
 
     public void ClearRun()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("GameSession.ClearRun ignored because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         CurrentRun = null;
         EmitSignal(SignalName.RunChanged);
+    }
+
+    private static bool IsGoRuntimeAuthorityEnabled()
+    {
+        string value = OS.GetEnvironment("STARSMUGGLER_GO_RUNTIME");
+        return string.Equals(value, "1", StringComparison.Ordinal) ||
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 }

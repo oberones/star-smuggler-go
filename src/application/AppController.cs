@@ -40,6 +40,12 @@ public partial class AppController : Node
 
     public override void _Ready()
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print("AppController is passive because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         _screenHost = GetNodeOrNull<Control>("%ScreenHost");
         _gameSession = GetNodeOrNull<GameSession>("%GameSession");
         _dataRepository = GetNodeOrNull<DataRepository>("%DataRepository");
@@ -57,6 +63,12 @@ public partial class AppController : Node
 
     public void NavigateTo(AppRoute route)
     {
+        if (IsGoRuntimeAuthorityEnabled())
+        {
+            GD.Print($"AppController ignored NavigateTo({route}) because STARSMUGGLER_GO_RUNTIME is enabled.");
+            return;
+        }
+
         if (_screenHost is null)
         {
             GD.PushError("AppController cannot navigate without a screen host.");
@@ -86,6 +98,13 @@ public partial class AppController : Node
         CurrentRoute = route;
         PlayRouteMusic(route);
         EmitSignal(SignalName.RouteChanged, route.ToString());
+    }
+
+    private static bool IsGoRuntimeAuthorityEnabled()
+    {
+        string value = OS.GetEnvironment("STARSMUGGLER_GO_RUNTIME");
+        return string.Equals(value, "1", StringComparison.Ordinal) ||
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 
     private Control? CreateMainMenuScreen()
