@@ -5,7 +5,7 @@ GO ?= go
 DOTNET ?= dotnet
 GODOT_BIN ?= /Applications/Godot\ .NET.app/Contents/MacOS/Godot
 
-.PHONY: help test test-go test-integration test-golden run-go build-dotnet smoke smoke-go smoke-travel godot-headless godot-open fmt fmt-go
+.PHONY: help test test-go test-integration test-golden run-go build-dotnet smoke smoke-go smoke-travel smoke-full godot-headless godot-open fmt fmt-go
 
 help:
 	@printf "Available targets:\n"
@@ -19,6 +19,7 @@ help:
 	@printf "  %-18s %s\n" "smoke" "Run the default headless Godot smoke test"
 	@printf "  %-18s %s\n" "smoke-go" "Run the headless smoke test with STARSMUGGLER_GO_RUNTIME=1"
 	@printf "  %-18s %s\n" "smoke-travel" "Run the travel-flow smoke check"
+	@printf "  %-18s %s\n" "smoke-full" "Run the full MVP loop smoke check"
 	@printf "  %-18s %s\n" "godot-headless" "Launch Godot headless directly"
 	@printf "  %-18s %s\n" "godot-open" "Open the project in the .NET-enabled Godot editor"
 	@printf "  %-18s %s\n" "fmt" "Format Go source files"
@@ -49,6 +50,9 @@ smoke-go:
 
 smoke-travel:
 	bash tests/smoke/travel_flow_check.sh
+
+smoke-full:
+	bash tests/smoke/full_loop_check.sh
 
 godot-headless:
 	"$(GODOT_BIN)" --headless --path "$(ROOT_DIR)" --quit-after 1

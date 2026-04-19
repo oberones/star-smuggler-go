@@ -32,6 +32,8 @@ type GameOverScreen interface {
 }
 
 type SceneBindings struct {
+	Resources    *ResourceCache
+	Audio        AudioBridge
 	MainMenu     MainMenuPresenter
 	PortOverview PortOverviewPresenter
 	Trade        TradePresenter
@@ -47,6 +49,7 @@ func NewSceneBindings(
 	balance services.EconomyBalanceService,
 	runEval services.RunEvaluator,
 ) SceneBindings {
+	resources := NewResourceCache()
 	storyPresenter := StoryPresenter{
 		Data:     data,
 		Factions: services.FactionService{},
@@ -59,6 +62,10 @@ func NewSceneBindings(
 	}
 
 	return SceneBindings{
+		Resources: resources,
+		Audio: AudioBridge{
+			Cache: resources,
+		},
 		MainMenu: MainMenuPresenter{},
 		PortOverview: PortOverviewPresenter{
 			Data:        data,
@@ -67,20 +74,24 @@ func NewSceneBindings(
 			RunEval:     runEval,
 			Story:       storyPresenter,
 			Progression: progressionPresenter,
+			Resources:   resources,
 		},
 		Trade: TradePresenter{
 			Data:        data,
 			Economy:     economy,
 			Story:       storyPresenter,
 			Progression: progressionPresenter,
+			Resources:   resources,
 		},
 		Travel: TravelPresenter{
-			Data:    data,
-			Travel:  travel,
-			Balance: balance,
+			Data:      data,
+			Travel:    travel,
+			Balance:   balance,
+			Resources: resources,
 		},
 		TravelAnim: TravelAnimationPresenter{
-			Data: data,
+			Data:      data,
+			Resources: resources,
 		},
 		GameOver: GameOverPresenter{
 			Data:    data,

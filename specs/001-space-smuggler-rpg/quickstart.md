@@ -2,12 +2,13 @@
 
 ## Goal
 
-Get the Go + `go-dot` MVP planning target into a runnable development loop while preserving the existing Godot project assets and using the MonoGame version as the parity reference.
+Get the Go + `go-dot` planning target into a repeatable development loop while preserving the existing Godot assets and using the MonoGame version as the parity reference.
 
 ## Prerequisites
 
-- Godot 4.6.1 installed
+- Godot 4.6.1 .NET-enabled editor installed
 - Go 1.24.x installed
+- .NET SDK installed for the legacy Godot C# shell build
 - This repository checked out locally
 - MonoGame reference project available at `/Users/oberon/Projects/coding/monogame/StarSmuggler`
 
@@ -21,34 +22,47 @@ Get the Go + `go-dot` MVP planning target into a runnable development loop while
 
 ## Initial Developer Workflow
 
-1. Open the Godot project from the repository root:
+1. Check the available helper commands:
 
 ```bash
-godot --path /Users/oberon/Projects/coding/godot/star-smuggler-go
+make help
 ```
 
-2. Run Go tests from the repository root once the Go module bootstrap is in place:
+2. Run the Go suite:
 
 ```bash
-go test ./...
+make test
 ```
 
-3. Run a headless Godot smoke test to verify scene and asset boot:
+3. Run the smoke checks:
 
 ```bash
-godot --headless --path /Users/oberon/Projects/coding/godot/star-smuggler-go --quit-after 1
+make smoke-travel
+make smoke-full
 ```
 
-4. Compare the current behavior against the MonoGame reference project for the same screen or loop slice before signing off on a change.
+4. Build the existing Godot C# shell when you need to verify the legacy scene layer still boots:
+
+```bash
+make build-dotnet
+```
+
+5. Open the project in the .NET-enabled Godot editor for visual/manual checks:
+
+```bash
+make godot-open
+```
+
+6. Compare the current behavior against the MonoGame reference project for the same screen or loop slice before signing off on a change.
 
 ## MVP Implementation Order
 
 1. Bootstrap the Go module and `go-dot` bridge layer.
 2. Port immutable content loading and runtime state models.
 3. Port economy, travel, event, save, and game-over logic into pure Go.
-4. Rebind the six MVP screens through `go-dot` presenters.
+4. Rebind the six MVP screens through `go-dot` presenters and bridge helpers.
 5. Verify parity with MonoGame behavior and visual composition.
-6. Add the first narrative spine after parity is stable.
+6. Add post-MVP story/progression layers after the parity loop is stable.
 
 ## Definition Of Ready For A New Slice
 
@@ -65,9 +79,9 @@ Before implementing any slice, confirm:
 A slice is done only when all of the following are true:
 
 - gameplay logic lives in Go rather than scene callbacks
-- `go test ./...` passes
+- `make test` passes
 - any new content/save schema has stable IDs and tests
-- Godot smoke run still boots
+- `make smoke` and `make smoke-go` still boot
 - the screen matches the old game closely enough in layout, action flow, and feedback
 - any intentional deviations from MonoGame behavior are documented
 
@@ -79,6 +93,16 @@ A slice is done only when all of the following are true:
 - Travel screen matches preview/navigation/travel commitment flow
 - Travel animation matches route pacing and transition role
 - Game over matches stranded-state messaging
+
+## Validation Status
+
+Validated on 2026-04-18 with:
+
+- `make help`
+- `make test`
+- `make build-dotnet`
+- `make smoke-travel`
+- `make smoke-full`
 
 ## Notes
 

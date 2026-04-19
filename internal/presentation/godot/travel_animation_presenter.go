@@ -18,7 +18,8 @@ type TravelAnimationViewModel struct {
 }
 
 type TravelAnimationPresenter struct {
-	Data domain.DataSnapshot
+	Data      domain.DataSnapshot
+	Resources *ResourceCache
 }
 
 func (p TravelAnimationPresenter) Present(run domain.RunState, durationSeconds float64, statusOverride string) (TravelAnimationViewModel, error) {
@@ -48,9 +49,16 @@ func (p TravelAnimationPresenter) Present(run domain.RunState, durationSeconds f
 	return TravelAnimationViewModel{
 		OriginName:            origin.Name,
 		DestinationName:       destination.Name,
-		BackgroundTexturePath: travelAnimationBackgroundTexturePath,
+		BackgroundTexturePath: p.resolveTexture(travelAnimationBackgroundTexturePath),
 		TravelCost:            run.PendingRoute.TravelCost,
 		DurationSeconds:       durationSeconds,
 		StatusMessage:         statusMessage,
 	}, nil
+}
+
+func (p TravelAnimationPresenter) resolveTexture(path string) string {
+	if p.Resources == nil {
+		return path
+	}
+	return p.Resources.ResolveTexture(path)
 }

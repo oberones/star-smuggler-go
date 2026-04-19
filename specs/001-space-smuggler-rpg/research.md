@@ -77,3 +77,38 @@
 - **Rationale**: The user has explicitly selected Go + `go-dot` as the main framework. Continuing to deepen the C# architecture would create a second migration later.
 - **Alternatives considered**:
   - Finish the C# implementation and port to Go later. Rejected because it doubles migration effort.
+
+## Parity Audit: 2026-04-18
+
+### Reference reviewed
+
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/GameManager.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Game1.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Audio/AudioManager.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/MainMenuScreen.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/PortOverviewScreen.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/TradeScreen.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/TravelScreen.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/TravelAnimationScreen.cs`
+- `/Users/oberon/Projects/coding/monogame/StarSmuggler/Screens/GameOverScreen.cs`
+
+### Parity confirmed
+
+- The Go runtime preserves the same six-screen loop: main menu, port overview, trade, travel, travel animation, and game over.
+- Starter economy parity remains aligned with MonoGame: 500 starting credits, 30 cargo capacity, random inner-port start, 15-credit base travel cost, zone-difference scaling, and every-fourth-jump market refresh.
+- The current Godot presentation still keeps the old full-screen background art, centered terminal framing, cockpit travel screen, and travel-animation role.
+- Main-menu music vs. route music intent matches the MonoGame reference: `singularity` for menu/game-over, current-port music for port/trade, and neutral travel music for route transitions.
+- Click SFX remain bound to the same class of menu/trade/travel actions as the MonoGame flow.
+
+### Intentional deviations
+
+- The Go port externalizes content into JSON and isolates gameplay in pure Go services instead of using the MonoGame singleton/stateful-screen pattern. This is a deliberate architectural correction, not a gameplay change.
+- The current trade flow returns to port overview after trading rather than forcing an immediate travel handoff via a `Done` button. This improves loop readability while preserving the same effective decision cadence.
+- The travel screen currently exposes destination choices through a presenter-generated list while still preserving the cockpit/preview composition, instead of the exact MonoGame previous/next carousel. The destination information and commitment pressure remain equivalent.
+- Story, faction, mission, and upgrade systems now exist beyond the MonoGame reference. They are additive layers on top of the parity loop rather than replacements for its baseline rules.
+- The Go-side smoke/test harness provides deterministic coverage that the MonoGame project did not have. This is an engineering improvement rather than a player-facing deviation.
+
+### Remaining polish notes
+
+- The Go presentation helpers now model route-audio decisions and resource caching, but the final `go-dot` runtime still needs to consume those helpers directly once the scene authority fully shifts away from the C# shell.
+- Headless Godot smoke still reports the known shutdown warning about leaked Godot resources on exit. It has not blocked the validated gameplay/test flow, but it remains worth revisiting after the full `go-dot` handoff.

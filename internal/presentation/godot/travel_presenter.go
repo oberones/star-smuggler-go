@@ -27,9 +27,10 @@ type TravelScreenViewModel struct {
 }
 
 type TravelPresenter struct {
-	Data    domain.DataSnapshot
-	Travel  services.TravelService
-	Balance services.EconomyBalanceService
+	Data      domain.DataSnapshot
+	Travel    services.TravelService
+	Balance   services.EconomyBalanceService
+	Resources *ResourceCache
 }
 
 func (p TravelPresenter) Present(run domain.RunState, quotes []services.TravelQuote, statusOverride string) (TravelScreenViewModel, error) {
@@ -45,7 +46,7 @@ func (p TravelPresenter) Present(run domain.RunState, quotes []services.TravelQu
 			Name:               quote.Destination.Name,
 			ZoneName:           string(quote.Destination.Zone),
 			Description:        quote.Destination.Description,
-			PreviewTexturePath: quote.Destination.PreviewTexturePath,
+			PreviewTexturePath: p.resolveTexture(quote.Destination.PreviewTexturePath),
 			TravelCost:         quote.Cost,
 		})
 	}
@@ -57,9 +58,16 @@ func (p TravelPresenter) Present(run domain.RunState, quotes []services.TravelQu
 
 	return TravelScreenViewModel{
 		CurrentPortName:       currentPort.Name,
-		BackgroundTexturePath: cockpitBackgroundTexturePath,
+		BackgroundTexturePath: p.resolveTexture(cockpitBackgroundTexturePath),
 		Credits:               run.Player.Credits,
 		Destinations:          destinations,
 		StatusMessage:         statusMessage,
 	}, nil
+}
+
+func (p TravelPresenter) resolveTexture(path string) string {
+	if p.Resources == nil {
+		return path
+	}
+	return p.Resources.ResolveTexture(path)
 }

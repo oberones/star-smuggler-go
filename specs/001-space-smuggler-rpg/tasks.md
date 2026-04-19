@@ -174,11 +174,11 @@
 
 **Purpose**: Final improvements that affect multiple stories and bring the experience closer to the old game’s presentation quality.
 
-- [ ] T066 [P] Run a full parity audit against the MonoGame reference and record any intentional deviations in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/research.md`
-- [ ] T067 Optimize texture and audio resource caching across presenters in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/resource_cache.go`
-- [ ] T068 Improve music transition and click SFX behavior to match the MonoGame feel in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/audio_bridge.go`
-- [ ] T069 [P] Add final smoke coverage for the complete MVP loop in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/full_loop_check.sh`
-- [ ] T070 Validate the documented developer flow and commands in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/quickstart.md`
+- [X] T066 [P] Run a full parity audit against the MonoGame reference and record any intentional deviations in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/research.md`
+- [X] T067 Optimize texture and audio resource caching across presenters in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/resource_cache.go`
+- [X] T068 Improve music transition and click SFX behavior to match the MonoGame feel in `/Users/oberon/Projects/coding/godot/star-smuggler-go/internal/presentation/godot/audio_bridge.go`
+- [X] T069 [P] Add final smoke coverage for the complete MVP loop in `/Users/oberon/Projects/coding/godot/star-smuggler-go/tests/smoke/full_loop_check.sh`
+- [X] T070 Validate the documented developer flow and commands in `/Users/oberon/Projects/coding/godot/star-smuggler-go/specs/001-space-smuggler-rpg/quickstart.md`
 
 ---
 

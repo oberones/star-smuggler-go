@@ -32,6 +32,7 @@ type PortOverviewPresenter struct {
 	RunEval     services.RunEvaluator
 	Story       StoryPresenter
 	Progression ProgressionPresenter
+	Resources   *ResourceCache
 }
 
 func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride string) (PortOverviewViewModel, error) {
@@ -72,8 +73,8 @@ func (p PortOverviewPresenter) Present(run domain.RunState, statusOverride strin
 		PortName:              port.Name,
 		PortDescription:       port.Description,
 		ZoneName:              string(port.Zone),
-		BackgroundTexturePath: port.BackgroundTexturePath,
-		MusicTrackID:          port.MusicTrackID,
+		BackgroundTexturePath: p.resolveTexture(port.BackgroundTexturePath),
+		MusicTrackID:          p.resolveMusic(port.MusicTrackID),
 		Credits:               run.Player.Credits,
 		CargoLoad:             p.Economy.GetCargoLoad(run),
 		CargoLimit:            run.Player.CargoLimit,
@@ -93,4 +94,18 @@ func recentEventDescription(event *domain.EventResult) string {
 	}
 
 	return event.ResolvedDescription
+}
+
+func (p PortOverviewPresenter) resolveTexture(path string) string {
+	if p.Resources == nil {
+		return path
+	}
+	return p.Resources.ResolveTexture(path)
+}
+
+func (p PortOverviewPresenter) resolveMusic(trackID string) string {
+	if p.Resources == nil {
+		return trackID
+	}
+	return p.Resources.ResolveMusic(trackID)
 }

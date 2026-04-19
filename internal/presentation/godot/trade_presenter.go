@@ -33,6 +33,7 @@ type TradePresenter struct {
 	Economy     services.EconomyService
 	Story       StoryPresenter
 	Progression ProgressionPresenter
+	Resources   *ResourceCache
 }
 
 func (p TradePresenter) Present(run domain.RunState, statusOverride string) (TradeScreenViewModel, error) {
@@ -81,8 +82,8 @@ func (p TradePresenter) Present(run domain.RunState, statusOverride string) (Tra
 
 	return TradeScreenViewModel{
 		PortName:              port.Name,
-		BackgroundTexturePath: port.TradeBackgroundPath,
-		MusicTrackID:          port.MusicTrackID,
+		BackgroundTexturePath: p.resolveTexture(port.TradeBackgroundPath),
+		MusicTrackID:          p.resolveMusic(port.MusicTrackID),
 		Credits:               run.Player.Credits,
 		CargoLoad:             p.Economy.GetCargoLoad(run),
 		CargoLimit:            run.Player.CargoLimit,
@@ -91,4 +92,18 @@ func (p TradePresenter) Present(run domain.RunState, statusOverride string) (Tra
 		ProgressionNotices:    append(append([]string{}, progressionViewModel.OwnedUpgradeNotices...), append(progressionViewModel.AvailableUpgradeNotices, progressionViewModel.SpecializationNotices...)...),
 		StatusMessage:         statusMessage,
 	}, nil
+}
+
+func (p TradePresenter) resolveTexture(path string) string {
+	if p.Resources == nil {
+		return path
+	}
+	return p.Resources.ResolveTexture(path)
+}
+
+func (p TradePresenter) resolveMusic(trackID string) string {
+	if p.Resources == nil {
+		return trackID
+	}
+	return p.Resources.ResolveMusic(trackID)
 }

@@ -64,3 +64,12 @@ func loadSnapshot(t *testing.T) domain.DataSnapshot {
 func seededRuntime(seed int64) services.RuntimeContext {
 	return services.NewSeededRuntimeContext(seed)
 }
+
+func seededRunAtPort(snapshot domain.DataSnapshot, portID string) domain.RunState {
+	run := domain.NewRunState()
+	run.Player.CurrentPortID = portID
+	run.FactionStandings = domain.DefaultFactionStandings(snapshot)
+	run.Story = domain.NewStoryState()
+	run.ActiveMissions = map[string]domain.MissionState{}
+	return run
+}
