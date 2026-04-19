@@ -1,3 +1,9 @@
+## 0.2.0 (2026-04-18)
+
+### Feat
+
+- add Go presenters and economy balance rules
+
 ## 0.1.0 (2026-04-18)
 
 ### Feat
