@@ -7,7 +7,11 @@ namespace StarSmugglerGo.Services;
 public sealed class UpgradeService
 {
     public IReadOnlyList<ShipUpgradeDefinition> GetVisibleUpgrades(DataSnapshot data)
-        => data.Upgrades.OrderBy(upgrade => upgrade.CostCredits).ThenBy(upgrade => upgrade.Name).ToList();
+        => data.Upgrades
+            .Where(upgrade => string.IsNullOrWhiteSpace(upgrade.RequiredFactionId))
+            .OrderBy(upgrade => upgrade.CostCredits)
+            .ThenBy(upgrade => upgrade.Name)
+            .ToList();
 
     public bool CanPurchase(RunState run, ShipUpgradeDefinition upgrade)
     {
@@ -58,7 +62,8 @@ public sealed class UpgradeService
 
         if (!string.IsNullOrWhiteSpace(upgrade.RequiredFactionId))
         {
-            return UpgradePurchaseResult.Failure($"{upgrade.Name} is still locked behind faction trust.");
+            return UpgradePurchaseResult.Failure(
+                $"{upgrade.Name} requires {upgrade.MinimumStanding} standing with {upgrade.RequiredFactionId}.");
         }
 
         if (run.Player.Credits < upgrade.CostCredits)
@@ -117,22 +122,8 @@ public sealed class UpgradeService
 
     public int GetCheapestTravelCostFromPort(RunState run, DataSnapshot data, TravelService travelService, PortDefinition origin)
     {
-        int cheapest = 0;
-        foreach (PortDefinition destination in data.Ports)
-        {
-            if (destination.Id == origin.Id)
-            {
-                continue;
-            }
-
-            int cost = AdjustTravelCost(run, data, travelService.GetTravelCost(origin, destination));
-            if (cheapest == 0 || cost < cheapest)
-            {
-                cheapest = cost;
-            }
-        }
-
-        return cheapest;
+        int baseCost = travelService.GetCheapestTravelCostFromPort(origin, data.Ports);
+        return AdjustTravelCost(run, data, baseCost);
     }
 
     public string SummarizeEffects(ShipUpgradeDefinition upgrade)

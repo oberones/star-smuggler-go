@@ -459,14 +459,18 @@ public partial class AppController : Node
 
         UpgradePurchaseResult result = _upgradeService.PurchaseUpgrade(run, _dataRepository.Snapshot, upgradeId);
         _audioService?.PlaySfx("click");
-        _gameSession.SaveCurrentRun();
-        RefreshTradeScreen(result.Message);
 
-        if (_currentScreen is TradeScreen tradeScreen)
+        if (result.Succeeded)
         {
-            // Ensure the header summary immediately reflects any cargo-cap or credit change.
-            tradeScreen.Bind(BuildTradeScreenViewModel(run, _dataRepository.Snapshot, result.Message));
+            _gameSession.SaveCurrentRun();
+            if (ShouldRouteToGameOver(run))
+            {
+                NavigateTo(AppRoute.GameOver);
+                return;
+            }
         }
+
+        RefreshTradeScreen(result.Message);
     }
 
     private void ApplyTrade(string itemId, int quantity, bool isBuy)
