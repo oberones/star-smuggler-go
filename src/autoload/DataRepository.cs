@@ -12,6 +12,7 @@ public partial class DataRepository : Node
     private const string PortsDataPath = "res://data/ports/ports.json";
     private const string ItemsDataPath = "res://data/items/items.json";
     private const string EventsDataPath = "res://data/events/events.json";
+    private const string UpgradesDataPath = "res://data/upgrades/ship_upgrades.json";
 
     public bool IsInitialized { get; private set; }
     public DataSnapshot Snapshot { get; private set; } = new();
@@ -40,6 +41,7 @@ public partial class DataRepository : Node
         List<PortRecord> portRecords = LoadJson<List<PortRecord>>(PortsDataPath) ?? new();
         List<ItemRecord> itemRecords = LoadJson<List<ItemRecord>>(ItemsDataPath) ?? new();
         List<EventRecord> eventRecords = LoadJson<List<EventRecord>>(EventsDataPath) ?? new();
+        List<UpgradeRecord> upgradeRecords = LoadJson<List<UpgradeRecord>>(UpgradesDataPath) ?? new();
 
         List<PortDefinition> ports = portRecords.Select(record => new PortDefinition
         {
@@ -72,14 +74,35 @@ public partial class DataRepository : Node
             Parameters = new Dictionary<string, double>(record.Parameters, StringComparer.Ordinal),
         }).ToList();
 
+        List<ShipUpgradeDefinition> upgrades = upgradeRecords.Select(record => new ShipUpgradeDefinition
+        {
+            Id = record.Id,
+            Name = record.Name,
+            Description = record.Description,
+            Category = Enum.Parse<UpgradeCategory>(record.Category),
+            CostCredits = record.CostCredits,
+            RequiredFactionId = record.RequiredFactionId,
+            MinimumStanding = record.MinimumStanding,
+            Specialization = string.IsNullOrWhiteSpace(record.Specialization)
+                ? null
+                : Enum.Parse<ShipSpecialization>(record.Specialization),
+            Effects = record.Effects.Select(effect => new UpgradeEffectDefinition
+            {
+                Type = Enum.Parse<UpgradeEffectType>(effect.Type),
+                Value = effect.Value,
+            }).ToList(),
+        }).ToList();
+
         return new DataSnapshot
         {
             Ports = ports,
             Items = items,
             Events = events,
+            Upgrades = upgrades,
             PortsById = ports.ToDictionary(definition => definition.Id, StringComparer.Ordinal),
             ItemsById = items.ToDictionary(definition => definition.Id, StringComparer.Ordinal),
             EventsById = events.ToDictionary(definition => definition.Id, StringComparer.Ordinal),
+            UpgradesById = upgrades.ToDictionary(definition => definition.Id, StringComparer.Ordinal),
         };
     }
 
@@ -129,5 +152,24 @@ public partial class DataRepository : Node
         public string EffectType { get; set; } = string.Empty;
         public int Weight { get; set; } = 1;
         public Dictionary<string, double> Parameters { get; set; } = new(StringComparer.Ordinal);
+    }
+
+    private sealed class UpgradeRecord
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public int CostCredits { get; set; }
+        public string RequiredFactionId { get; set; } = string.Empty;
+        public string MinimumStanding { get; set; } = string.Empty;
+        public string Specialization { get; set; } = string.Empty;
+        public List<UpgradeEffectRecord> Effects { get; set; } = new();
+    }
+
+    private sealed class UpgradeEffectRecord
+    {
+        public string Type { get; set; } = string.Empty;
+        public int Value { get; set; }
     }
 }

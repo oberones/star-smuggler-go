@@ -15,6 +15,9 @@ public partial class TradeScreen : Control
     [Signal]
     public delegate void SellRequestedEventHandler(string itemId, int quantity);
 
+    [Signal]
+    public delegate void UpgradePurchaseRequestedEventHandler(string upgradeId);
+
     private Label? _titleLabel;
     private Label? _summaryLabel;
     private ItemList? _itemList;
@@ -26,10 +29,17 @@ public partial class TradeScreen : Control
     private Label? _statusLabel;
     private Button? _buyButton;
     private Button? _sellButton;
+    private ItemList? _upgradeList;
+    private Label? _selectedUpgradeLabel;
+    private Label? _upgradeDescriptionLabel;
+    private Label? _upgradeEffectLabel;
+    private Label? _upgradeAvailabilityLabel;
+    private Button? _purchaseUpgradeButton;
     private Button? _backButton;
 
     private TradeScreenViewModel _viewModel = new();
     private int _selectedIndex = -1;
+    private int _selectedUpgradeIndex = -1;
     private bool _isViewReady;
 
     public override void _Ready()
@@ -46,6 +56,12 @@ public partial class TradeScreen : Control
         _statusLabel = GetNodeOrNull<Label>("%StatusLabel");
         _buyButton = GetNodeOrNull<Button>("%BuyButton");
         _sellButton = GetNodeOrNull<Button>("%SellButton");
+        _upgradeList = GetNodeOrNull<ItemList>("%UpgradeList");
+        _selectedUpgradeLabel = GetNodeOrNull<Label>("%SelectedUpgradeLabel");
+        _upgradeDescriptionLabel = GetNodeOrNull<Label>("%UpgradeDescriptionLabel");
+        _upgradeEffectLabel = GetNodeOrNull<Label>("%UpgradeEffectLabel");
+        _upgradeAvailabilityLabel = GetNodeOrNull<Label>("%UpgradeAvailabilityLabel");
+        _purchaseUpgradeButton = GetNodeOrNull<Button>("%PurchaseUpgradeButton");
         _backButton = GetNodeOrNull<Button>("%BackButton");
 
         if (_itemList is not null)
@@ -63,6 +79,16 @@ public partial class TradeScreen : Control
             _sellButton.Pressed += OnSellPressed;
         }
 
+        if (_upgradeList is not null)
+        {
+            _upgradeList.ItemSelected += OnUpgradeSelected;
+        }
+
+        if (_purchaseUpgradeButton is not null)
+        {
+            _purchaseUpgradeButton.Pressed += OnPurchaseUpgradePressed;
+        }
+
         if (_backButton is not null)
         {
             _backButton.Pressed += () => EmitSignal(SignalName.BackRequested);
@@ -78,6 +104,10 @@ public partial class TradeScreen : Control
         if (_selectedIndex < 0 || _selectedIndex >= viewModel.Items.Count)
         {
             _selectedIndex = viewModel.Items.Count > 0 ? 0 : -1;
+        }
+        if (_selectedUpgradeIndex < 0 || _selectedUpgradeIndex >= viewModel.Upgrades.Count)
+        {
+            _selectedUpgradeIndex = viewModel.Upgrades.Count > 0 ? 0 : -1;
         }
         ApplyViewState();
     }
@@ -121,12 +151,28 @@ public partial class TradeScreen : Control
             }
         }
 
+        if (_upgradeList is not null)
+        {
+            _upgradeList.Clear();
+            foreach (UpgradeOptionViewModel upgrade in _viewModel.Upgrades)
+            {
+                string status = upgrade.IsInstalled ? "installed" : upgrade.CanPurchase ? "ready" : "locked";
+                _upgradeList.AddItem($"{upgrade.Name}  |  {upgrade.CostCredits} cr  |  {status}");
+            }
+
+            if (_selectedUpgradeIndex >= 0)
+            {
+                _upgradeList.Select(_selectedUpgradeIndex);
+            }
+        }
+
         if (_statusLabel is not null)
         {
             _statusLabel.Text = _viewModel.StatusMessage;
         }
 
         RefreshSelectionDetails();
+        RefreshUpgradeDetails();
     }
 
     private void OnItemSelected(long index)
@@ -155,6 +201,23 @@ public partial class TradeScreen : Control
         }
 
         EmitSignal(SignalName.SellRequested, item.ItemId, (int)_quantitySpinBox.Value);
+    }
+
+    private void OnUpgradeSelected(long index)
+    {
+        _selectedUpgradeIndex = (int)index;
+        RefreshUpgradeDetails();
+    }
+
+    private void OnPurchaseUpgradePressed()
+    {
+        UpgradeOptionViewModel? upgrade = GetSelectedUpgrade();
+        if (upgrade is null || !upgrade.CanPurchase)
+        {
+            return;
+        }
+
+        EmitSignal(SignalName.UpgradePurchaseRequested, upgrade.UpgradeId);
     }
 
     private void RefreshSelectionDetails()
@@ -206,10 +269,76 @@ public partial class TradeScreen : Control
         }
     }
 
+    private void RefreshUpgradeDetails()
+    {
+        UpgradeOptionViewModel? upgrade = GetSelectedUpgrade();
+        if (upgrade is null)
+        {
+            if (_selectedUpgradeLabel is not null)
+            {
+                _selectedUpgradeLabel.Text = "No ship upgrades loaded";
+            }
+
+            if (_upgradeDescriptionLabel is not null)
+            {
+                _upgradeDescriptionLabel.Text = string.Empty;
+            }
+
+            if (_upgradeEffectLabel is not null)
+            {
+                _upgradeEffectLabel.Text = string.Empty;
+            }
+
+            if (_upgradeAvailabilityLabel is not null)
+            {
+                _upgradeAvailabilityLabel.Text = string.Empty;
+            }
+
+            if (_purchaseUpgradeButton is not null)
+            {
+                _purchaseUpgradeButton.Disabled = true;
+            }
+
+            return;
+        }
+
+        if (_selectedUpgradeLabel is not null)
+        {
+            _selectedUpgradeLabel.Text = upgrade.Name;
+        }
+
+        if (_upgradeDescriptionLabel is not null)
+        {
+            _upgradeDescriptionLabel.Text = upgrade.Description;
+        }
+
+        if (_upgradeEffectLabel is not null)
+        {
+            _upgradeEffectLabel.Text = $"Effects: {upgrade.EffectSummary}";
+        }
+
+        if (_upgradeAvailabilityLabel is not null)
+        {
+            _upgradeAvailabilityLabel.Text = upgrade.AvailabilityText;
+        }
+
+        if (_purchaseUpgradeButton is not null)
+        {
+            _purchaseUpgradeButton.Disabled = !upgrade.CanPurchase;
+        }
+    }
+
     private TradeItemViewModel? GetSelectedItem()
     {
         return _selectedIndex >= 0 && _selectedIndex < _viewModel.Items.Count
             ? _viewModel.Items[_selectedIndex]
+            : null;
+    }
+
+    private UpgradeOptionViewModel? GetSelectedUpgrade()
+    {
+        return _selectedUpgradeIndex >= 0 && _selectedUpgradeIndex < _viewModel.Upgrades.Count
+            ? _viewModel.Upgrades[_selectedUpgradeIndex]
             : null;
     }
 }

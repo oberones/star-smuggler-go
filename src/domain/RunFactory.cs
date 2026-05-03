@@ -38,6 +38,7 @@ public static class RunFactory
             },
             Cargo = new CargoState(),
             MarketsByPortId = marketSnapshots,
+            Progression = new ShipProgressionState(),
             JumpsSinceLastUpdate = 0,
         };
     }

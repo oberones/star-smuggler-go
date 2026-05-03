@@ -21,6 +21,7 @@ public partial class PortOverviewScreen : Control
     private Label? _descriptionLabel;
     private Label? _statsLabel;
     private Label? _statusLabel;
+    private Label? _progressionLabel;
     private Label? _goodsListLabel;
     private Button? _backButton;
     private Button? _travelButton;
@@ -37,6 +38,7 @@ public partial class PortOverviewScreen : Control
         _descriptionLabel = GetNodeOrNull<Label>("%DescriptionLabel");
         _statsLabel = GetNodeOrNull<Label>("%StatsLabel");
         _statusLabel = GetNodeOrNull<Label>("%StatusLabel");
+        _progressionLabel = GetNodeOrNull<Label>("%ProgressionLabel");
         _goodsListLabel = GetNodeOrNull<Label>("%GoodsListLabel");
         _backButton = GetNodeOrNull<Button>("%BackButton");
         _travelButton = GetNodeOrNull<Button>("%TravelButton");
@@ -123,6 +125,11 @@ public partial class PortOverviewScreen : Control
             }
 
             _statusLabel.Text = _overrideStatusMessage ?? statusText;
+        }
+
+        if (_progressionLabel is not null)
+        {
+            _progressionLabel.Text = _viewModel.ProgressionSummary;
         }
 
         if (_goodsListLabel is not null)
