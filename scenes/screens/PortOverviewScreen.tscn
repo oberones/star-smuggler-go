@@ -86,6 +86,13 @@ theme_override_font_sizes/font_size = 16
 autowrap_mode = 3
 text = "Status"
 
+[node name="ProgressionLabel" type="Label" parent="OuterMargin/HBox/InfoPanel/InfoMargin/InfoVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+text = "Upgrade summary"
+
 [node name="RouteHintLabel" type="Label" parent="OuterMargin/HBox/InfoPanel/InfoMargin/InfoVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15

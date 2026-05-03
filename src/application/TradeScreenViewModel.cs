@@ -11,5 +11,6 @@ public sealed class TradeScreenViewModel
     public int CargoLoad { get; init; }
     public int CargoLimit { get; init; }
     public IReadOnlyList<TradeItemViewModel> Items { get; init; } = new List<TradeItemViewModel>();
+    public IReadOnlyList<UpgradeOptionViewModel> Upgrades { get; init; } = new List<UpgradeOptionViewModel>();
     public string StatusMessage { get; init; } = string.Empty;
 }

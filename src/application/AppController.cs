@@ -23,6 +23,7 @@ public partial class AppController : Node
     private readonly RunEvaluator _runEvaluator = new();
     private readonly TradeService _tradeService = new();
     private readonly EventService _eventService = new();
+    private readonly UpgradeService _upgradeService = new();
     private readonly Random _random = new();
 
     [Signal]
@@ -217,6 +218,7 @@ public partial class AppController : Node
         };
         screen.BuyRequested += OnBuyRequested;
         screen.SellRequested += OnSellRequested;
+        screen.UpgradePurchaseRequested += OnUpgradePurchaseRequested;
 
         return screen;
     }
@@ -318,8 +320,13 @@ public partial class AppController : Node
         }
 
         var goods = _economyService.GetAvailableGoodsForCurrentPort(run, data);
-        bool isGameOver = _runEvaluator.IsGameOver(run, data, _economyService, _travelService);
-        int cheapestTravelCost = _travelService.GetCheapestTravelCostFromPort(port, data.Ports);
+        bool isGameOver = _runEvaluator.IsGameOver(run, data, _economyService, _travelService, _upgradeService);
+        int cheapestTravelCost = _upgradeService.GetCheapestTravelCostFromPort(run, data, _travelService, port);
+        List<string> installedUpgrades = run.Progression.PurchasedUpgradeIds
+            .Where(data.UpgradesById.ContainsKey)
+            .Select(upgradeId => data.UpgradesById[upgradeId].Name)
+            .ToList();
+        int availableUpgradeCount = data.Upgrades.Count(upgrade => _upgradeService.CanPurchase(run, upgrade));
 
         return new PortOverviewViewModel
         {
@@ -334,6 +341,9 @@ public partial class AppController : Node
             CheapestTravelCost = cheapestTravelCost,
             IsGameOver = isGameOver,
             RecentEventText = run.RecentEvent?.ResolvedDescription ?? string.Empty,
+            ProgressionSummary = installedUpgrades.Count == 0
+                ? $"No upgrades installed. {availableUpgradeCount} upgrade(s) ready at the trader."
+                : $"Installed upgrades: {string.Join(", ", installedUpgrades)}",
             AvailableGoods = goods
                 .Select(item => $"{item.Name} ({item.BasePrice} base)")
                 .ToList(),
@@ -367,6 +377,27 @@ public partial class AppController : Node
                 })
                 .ToList();
 
+        List<UpgradeOptionViewModel> upgrades = _upgradeService
+            .GetVisibleUpgrades(data)
+            .Select(upgrade => new UpgradeOptionViewModel
+            {
+                UpgradeId = upgrade.Id,
+                Name = upgrade.Name,
+                Description = upgrade.Description,
+                EffectSummary = _upgradeService.SummarizeEffects(upgrade),
+                AvailabilityText = _upgradeService.DescribeAvailability(run, upgrade),
+                CostCredits = upgrade.CostCredits,
+                CanPurchase = _upgradeService.CanPurchase(run, upgrade),
+                IsInstalled = run.Progression.HasUpgrade(upgrade.Id),
+            })
+            .ToList();
+
+        string defaultStatus = "Select a good, choose a quantity, and trade.";
+        if (string.IsNullOrWhiteSpace(statusMessage) && upgrades.Any(option => option.CanPurchase))
+        {
+            defaultStatus += "\nNew ship upgrades are available below.";
+        }
+
         return new TradeScreenViewModel
         {
             PortName = port.Name,
@@ -376,9 +407,8 @@ public partial class AppController : Node
             CargoLoad = _economyService.GetCargoLoad(run),
             CargoLimit = run.Player.CargoLimit,
             Items = items,
-            StatusMessage = string.IsNullOrWhiteSpace(statusMessage)
-                ? "Select a good, choose a quantity, and trade."
-                : statusMessage,
+            Upgrades = upgrades,
+            StatusMessage = string.IsNullOrWhiteSpace(statusMessage) ? defaultStatus : statusMessage,
         };
     }
 
@@ -394,7 +424,7 @@ public partial class AppController : Node
                 ZoneName = destination.Zone.ToString(),
                 Description = destination.Description,
                 PreviewTexturePath = destination.PreviewTexturePath,
-                TravelCost = _travelService.GetTravelCost(currentPort, destination),
+                TravelCost = _upgradeService.AdjustTravelCost(run, data, _travelService.GetTravelCost(currentPort, destination)),
             })
             .ToList();
 
@@ -418,6 +448,29 @@ public partial class AppController : Node
     private void OnSellRequested(string itemId, int quantity)
     {
         ApplyTrade(itemId, quantity, isBuy: false);
+    }
+
+    private void OnUpgradePurchaseRequested(string upgradeId)
+    {
+        if (_gameSession?.CurrentRun is not RunState run || _dataRepository is null)
+        {
+            return;
+        }
+
+        UpgradePurchaseResult result = _upgradeService.PurchaseUpgrade(run, _dataRepository.Snapshot, upgradeId);
+        _audioService?.PlaySfx("click");
+
+        if (result.Succeeded)
+        {
+            _gameSession.SaveCurrentRun();
+            if (ShouldRouteToGameOver(run))
+            {
+                NavigateTo(AppRoute.GameOver);
+                return;
+            }
+        }
+
+        RefreshTradeScreen(result.Message);
     }
 
     private void ApplyTrade(string itemId, int quantity, bool isBuy)
@@ -481,7 +534,7 @@ public partial class AppController : Node
             return;
         }
 
-        int cost = _travelService.GetTravelCost(origin, destination);
+        int cost = _upgradeService.AdjustTravelCost(run, data, _travelService.GetTravelCost(origin, destination));
         if (run.Player.Credits < cost)
         {
             RefreshTravelScreen($"You need {cost} credits to reach {destination.Name}.");
@@ -560,7 +613,7 @@ public partial class AppController : Node
     private bool ShouldRouteToGameOver(RunState run)
     {
         return _dataRepository is not null &&
-               _runEvaluator.IsGameOver(run, _dataRepository.Snapshot, _economyService, _travelService);
+               _runEvaluator.IsGameOver(run, _dataRepository.Snapshot, _economyService, _travelService, _upgradeService);
     }
 
     private bool CanOfferEmergencyRecovery(RunState run)
@@ -589,7 +642,7 @@ public partial class AppController : Node
             return;
         }
 
-        int cheapestTravelCost = _travelService.GetCheapestTravelCostFromPort(port, _dataRepository.Snapshot.Ports);
+        int cheapestTravelCost = _upgradeService.GetCheapestTravelCostFromPort(run, _dataRepository.Snapshot, _travelService, port);
         int recoveryGrant = Math.Max(25, cheapestTravelCost - run.Player.Credits);
         run.Player.Credits += recoveryGrant;
         run.EmergencyRecoveryUsed = true;
@@ -619,7 +672,7 @@ public partial class AppController : Node
         }
 
         int cargoValue = _economyService.GetSellableCargoValueAtCurrentPort(run, data);
-        int cheapestTravel = _travelService.GetCheapestTravelCostFromPort(port, data.Ports);
+        int cheapestTravel = _upgradeService.GetCheapestTravelCostFromPort(run, data, _travelService, port);
 
         return
             $"You are stranded at {port.Name}.\n\n" +
@@ -641,7 +694,7 @@ public partial class AppController : Node
             return "Emergency recovery is unavailable because the current port could not be resolved.";
         }
 
-        int cheapestTravelCost = _travelService.GetCheapestTravelCostFromPort(port, data.Ports);
+        int cheapestTravelCost = _upgradeService.GetCheapestTravelCostFromPort(run, data, _travelService, port);
         int recoveryGrant = Math.Max(25, cheapestTravelCost - run.Player.Credits);
         return $"Emergency recovery will grant {recoveryGrant} credits so you can attempt one more route.";
     }

@@ -15,5 +15,6 @@ public sealed class PortOverviewViewModel
     public int CheapestTravelCost { get; init; }
     public bool IsGameOver { get; init; }
     public string RecentEventText { get; init; } = string.Empty;
+    public string ProgressionSummary { get; init; } = string.Empty;
     public IReadOnlyList<string> AvailableGoods { get; init; } = new List<string>();
 }

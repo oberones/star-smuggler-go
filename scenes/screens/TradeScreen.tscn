@@ -187,6 +187,53 @@ theme_override_font_sizes/font_size = 16
 autowrap_mode = 3
 text = "Trade status"
 
+[node name="UpgradeSeparator" type="HSeparator" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+layout_mode = 2
+
+[node name="UpgradesTitle" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Ship Upgrades"
+
+[node name="UpgradeList" type="ItemList" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+
+[node name="SelectedUpgradeLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select an upgrade"
+
+[node name="UpgradeDescriptionLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+text = "Upgrade description"
+
+[node name="UpgradeEffectLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+text = "Effects"
+
+[node name="UpgradeAvailabilityLabel" type="Label" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+text = "Availability"
+
+[node name="PurchaseUpgradeButton" type="Button" parent="OuterMargin/VBox/ContentRow/DetailsPanel/DetailsMargin/DetailsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 48)
+layout_mode = 2
+tooltip_text = "Install the selected upgrade if your ship can afford it."
+text = "Install Upgrade"
+
 [node name="FooterRow" type="HBoxContainer" parent="OuterMargin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
